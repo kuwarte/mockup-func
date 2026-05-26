@@ -1,2102 +1,1098 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>FAMSync — Recruitment Management</title>
-		<link
-			href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap"
-			rel="stylesheet"
-		/>
-		<style>
-			:root {
-				--forest: #1b3a2d;
-				--forest-mid: #2e5940;
-				--forest-lt: #ebf5ef;
-				--forest-xs: #f4faf6;
-				--crimson: #8c2020;
-				--crimson-lt: #fdf1f1;
-				--gold: #c08a30;
-				--gold-lt: #fdf6e7;
-				--ink: #1a1a1a;
-				--ink-mid: #4a4a4a;
-				--ink-soft: #7a7a7a;
-				--line: #e4e8e3;
-				--canvas: #f7f8f5;
-				--white: #ffffff;
-				--amber: #b07018;
-				--amber-lt: #fff8ec;
-				--teal: #1b6b5a;
-				--teal-lt: #ebf7f4;
-				--purple-lt: #f3f0fa;
-				--purple: #5b3e9c;
-				--r-sm: 6px;
-				--r: 10px;
-				--r-lg: 16px;
-				--sh-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-				--sh: 0 4px 16px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
-				--sh-lg: 0 12px 40px rgba(0, 0, 0, 0.14), 0 2px 8px rgba(0, 0, 0, 0.06);
-			}
-			*,
-			*::before,
-			*::after {
-				box-sizing: border-box;
-				margin: 0;
-				padding: 0;
-			}
-			html,
-			body {
-				height: 100%;
-				overflow: hidden;
-			}
-			body {
-				font-family: "DM Sans", sans-serif;
-				background: var(--canvas);
-				color: var(--ink);
-				font-size: 14px;
-				line-height: 1.5;
-				-webkit-font-smoothing: antialiased;
-				display: flex;
-				flex-direction: column;
-			}
-			button,
-			select,
-			input {
-				font-family: inherit;
-			}
-			a {
-				text-decoration: none;
-				color: inherit;
-			}
-			::-webkit-scrollbar {
-				width: 4px;
-				height: 4px;
-			}
-			::-webkit-scrollbar-track {
-				background: transparent;
-			}
-			::-webkit-scrollbar-thumb {
-				background: #ccc;
-				border-radius: 4px;
-			}
-			@keyframes pulse {
-				0%,
-				100% {
-					opacity: 1;
-				}
-				50% {
-					opacity: 0.4;
-				}
-			}
-			@keyframes modalIn {
-				from {
-					opacity: 0;
-					transform: scale(0.96) translateY(8px);
-				}
-			}
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>FAMSync</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --forest:#1b3a2d;--forest-mid:#2e5940;--forest-lt:#ebf5ef;--forest-xs:#f4faf6;
+  --crimson:#8c2020;--crimson-lt:#fdf1f1;--gold:#c08a30;--gold-lt:#fdf6e7;
+  --ink:#1a1a1a;--ink-mid:#4a4a4a;--ink-soft:#7a7a7a;--line:#e4e8e3;
+  --canvas:#f7f8f5;--white:#ffffff;--amber:#b07018;--amber-lt:#fff8ec;
+  --teal:#1b6b5a;--teal-lt:#ebf7f4;--purple-lt:#f3f0fa;--purple:#5b3e9c;
+  --r-sm:6px;--r:10px;--r-lg:16px;
+  --sh-sm:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --sh:0 4px 16px rgba(0,0,0,.08),0 1px 4px rgba(0,0,0,.04);
+  --sh-lg:0 12px 40px rgba(0,0,0,.14),0 2px 8px rgba(0,0,0,.06);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:"DM Sans",sans-serif;background:var(--canvas);color:var(--ink);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;}
+button,select,input,textarea{font-family:inherit;}
+a{text-decoration:none;color:inherit;}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:#bbb;border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:#888;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes modalIn{from{opacity:0;transform:scale(.96) translateY(8px)}}
 
-			/* TOPBAR */
-			.topbar {
-				background: var(--white);
-				border-bottom: 1px solid var(--line);
-				height: 60px;
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				padding: 0 24px;
-				flex-shrink: 0;
-				z-index: 20;
-			}
-			.topbar-left {
-				display: flex;
-				align-items: center;
-				gap: 14px;
-			}
-			.node-badge {
-				background: var(--crimson-lt);
-				color: var(--crimson);
-				font-size: 10px;
-				font-weight: 700;
-				letter-spacing: 0.06em;
-				padding: 4px 10px;
-				border-radius: 20px;
-				border: 1px solid rgba(140, 32, 32, 0.12);
-				text-transform: uppercase;
-			}
-			.loc-label {
-				font-size: 12px;
-				color: var(--ink-soft);
-				display: flex;
-				align-items: center;
-				gap: 5px;
-			}
-			.topbar-right {
-				display: flex;
-				align-items: center;
-				gap: 12px;
-			}
-			.role-sw {
-				background: #f0f2ee;
-				border-radius: 8px;
-				padding: 3px;
-				display: flex;
-				gap: 2px;
-			}
-			.role-btn {
-				padding: 5px 13px;
-				border-radius: 6px;
-				font-size: 12px;
-				font-weight: 600;
-				border: none;
-				cursor: pointer;
-				transition: all 0.2s;
-				background: transparent;
-				color: var(--ink-soft);
-			}
-			.role-btn.active {
-				background: var(--white);
-				color: var(--ink);
-				box-shadow: var(--sh-sm);
-			}
-			.dv {
-				width: 1px;
-				height: 28px;
-				background: var(--line);
-			}
-			.avatar {
-				width: 32px;
-				height: 32px;
-				border-radius: 50%;
-				background: var(--forest);
-				color: var(--white);
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				font-weight: 700;
-				font-size: 13px;
-				flex-shrink: 0;
-			}
-			.user-meta .name {
-				font-size: 12px;
-				font-weight: 700;
-				color: var(--ink);
-				display: block;
-				line-height: 1.2;
-			}
-			.user-meta .role {
-				font-size: 10px;
-				color: var(--ink-soft);
-				font-weight: 500;
-				display: block;
-			}
+/* TOPBAR */
+.topbar{background:var(--white);border-bottom:1px solid var(--line);height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0;z-index:20;}
+.topbar-left{display:flex;align-items:center;gap:14px;}
+.loc-label{font-size:12px;color:var(--ink-soft);display:flex;align-items:center;gap:5px;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.role-sw{background:#f0f2ee;border-radius:8px;padding:3px;display:flex;gap:2px;}
+.role-btn{padding:5px 13px;border-radius:6px;font-size:12px;font-weight:600;border:none;cursor:pointer;transition:all .2s;background:transparent;color:var(--ink-soft);}
+.role-btn.active{background:var(--white);color:var(--ink);box-shadow:var(--sh-sm);}
+.dv{width:1px;height:28px;background:var(--line);}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--forest);color:var(--white);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;}
+.user-meta .name{font-size:12px;font-weight:700;color:var(--ink);display:block;line-height:1.2;}
+.user-meta .role{font-size:10px;color:var(--ink-soft);font-weight:500;display:block;}
 
-			/* LAYOUT */
-			.app-body {
-				display: flex;
-				flex: 1;
-				overflow: hidden;
-			}
+/* LAYOUT */
+.app-body{display:flex;flex:1;overflow:hidden;}
+.sidebar{width:220px;background:var(--forest);display:flex;flex-direction:column;justify-content:space-between;flex-shrink:0;z-index:15;}
+.brand{padding:18px 20px 16px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:10px;}
+.brand-icon{width:32px;height:32px;background:var(--crimson);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:"Lora",serif;font-weight:700;font-size:16px;color:var(--white);flex-shrink:0;}
+.brand-name{font-family:"Lora",serif;font-size:15px;font-weight:700;color:var(--white);line-height:1;display:block;}
+.brand-sub{font-size:9px;color:#6ec895;letter-spacing:.1em;text-transform:uppercase;font-weight:600;margin-top:3px;display:block;}
+.nav{padding:10px;display:flex;flex-direction:column;gap:2px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r-sm);font-size:13px;font-weight:500;color:rgba(255,255,255,.55);cursor:pointer;transition:all .15s;border:none;background:none;text-align:left;width:100%;}
+.nav-item:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.9);}
+.nav-item.active{background:rgba(255,255,255,.12);color:var(--white);}
+.nav-item.active svg{opacity:1;color:#6ec895;}
+.nav-item svg{flex-shrink:0;opacity:.6;}
+.nav-sec{padding:12px 12px 5px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);display:flex;align-items:center;justify-content:space-between;}
+.lock-tag{background:rgba(192,138,48,.15);color:var(--gold);font-size:8px;font-weight:700;padding:2px 6px;border-radius:4px;border:1px solid rgba(192,138,48,.2);}
+.nav-item.locked{opacity:.4;pointer-events:none;}
+.nav-item.unlocked{opacity:1;pointer-events:all;}
+.sfooter{padding:14px 20px;border-top:1px solid rgba(255,255,255,.07);}
+.sfooter .sl{display:flex;align-items:center;font-size:11px;font-weight:600;color:var(--white);gap:6px;}
+.dot{width:6px;height:6px;background:#6ec895;border-radius:50%;animation:pulse 2s infinite;flex-shrink:0;}
+.sfooter .sm{font-size:10px;color:rgba(255,255,255,.3);margin-top:4px;}
 
-			/* SIDEBAR */
-			.sidebar {
-				width: 220px;
-				background: var(--forest);
-				display: flex;
-				flex-direction: column;
-				justify-content: space-between;
-				flex-shrink: 0;
-				z-index: 15;
-			}
-			.brand {
-				padding: 18px 20px 16px;
-				border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-				display: flex;
-				align-items: center;
-				gap: 10px;
-			}
-			.brand-icon {
-				width: 32px;
-				height: 32px;
-				background: var(--crimson);
-				border-radius: 8px;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				font-family: "Lora", serif;
-				font-weight: 700;
-				font-size: 16px;
-				color: var(--white);
-				flex-shrink: 0;
-			}
-			.brand-name {
-				font-family: "Lora", serif;
-				font-size: 15px;
-				font-weight: 700;
-				color: var(--white);
-				line-height: 1;
-				display: block;
-			}
-			.brand-sub {
-				font-size: 9px;
-				color: #6ec895;
-				letter-spacing: 0.1em;
-				text-transform: uppercase;
-				font-weight: 600;
-				margin-top: 3px;
-				display: block;
-			}
-			.nav {
-				padding: 10px;
-				display: flex;
-				flex-direction: column;
-				gap: 2px;
-			}
-			.nav-item {
-				display: flex;
-				align-items: center;
-				gap: 10px;
-				padding: 9px 12px;
-				border-radius: var(--r-sm);
-				font-size: 13px;
-				font-weight: 500;
-				color: rgba(255, 255, 255, 0.55);
-				cursor: pointer;
-				transition: all 0.15s;
-				border: none;
-				background: none;
-				text-align: left;
-				width: 100%;
-			}
-			.nav-item:hover {
-				background: rgba(255, 255, 255, 0.07);
-				color: rgba(255, 255, 255, 0.9);
-			}
-			.nav-item.active {
-				background: rgba(255, 255, 255, 0.12);
-				color: var(--white);
-			}
-			.nav-item.active svg {
-				opacity: 1;
-				color: #6ec895;
-			}
-			.nav-item svg {
-				flex-shrink: 0;
-				opacity: 0.6;
-			}
-			.nav-sec {
-				padding: 12px 12px 5px;
-				font-size: 9px;
-				font-weight: 700;
-				letter-spacing: 0.1em;
-				text-transform: uppercase;
-				color: rgba(255, 255, 255, 0.3);
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-			}
-			.lock-tag {
-				background: rgba(192, 138, 48, 0.15);
-				color: var(--gold);
-				font-size: 8px;
-				font-weight: 700;
-				padding: 2px 6px;
-				border-radius: 4px;
-				border: 1px solid rgba(192, 138, 48, 0.2);
-			}
-			.nav-item.locked {
-				opacity: 0.4;
-				pointer-events: none;
-			}
-			.nav-item.unlocked {
-				opacity: 1;
-				pointer-events: all;
-			}
-			.sf {
-				padding: 14px 20px;
-				border-top: 1px solid rgba(255, 255, 255, 0.07);
-			}
-			.sf .sl {
-				display: flex;
-				align-items: center;
-				font-size: 11px;
-				font-weight: 600;
-				color: var(--white);
-				gap: 6px;
-			}
-			.dot {
-				width: 6px;
-				height: 6px;
-				background: #6ec895;
-				border-radius: 50%;
-				animation: pulse 2s infinite;
-				flex-shrink: 0;
-			}
-			.sf .sm {
-				font-size: 10px;
-				color: rgba(255, 255, 255, 0.3);
-				margin-top: 4px;
-			}
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
 
-			/* MAIN */
-			.main {
-				flex: 1;
-				display: flex;
-				flex-direction: column;
-				overflow: hidden;
-			}
+/* CTRL BAR */
+.ctrlbar{background:var(--white);border-bottom:1px solid var(--line);padding:10px 24px;display:flex;align-items:center;gap:12px;flex-shrink:0;flex-wrap:wrap;}
+.search-wrap{position:relative;width:240px;}
+.search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:#bbb;}
+.si{width:100%;background:var(--canvas);border:1px solid var(--line);border-radius:var(--r-sm);padding:7px 10px 7px 32px;font-size:13px;color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s;}
+.si:focus{border-color:var(--forest-mid);box-shadow:0 0 0 3px rgba(27,58,45,.08);}
+.si::placeholder{color:#c0c0c0;}
 
-			/* CONTROL BAR */
-			.ctrlbar {
-				background: var(--white);
-				border-bottom: 1px solid var(--line);
-				padding: 12px 24px;
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				gap: 16px;
-				flex-shrink: 0;
-			}
-			.sw {
-				position: relative;
-				width: 300px;
-			}
-			.sw svg {
-				position: absolute;
-				left: 11px;
-				top: 50%;
-				transform: translateY(-50%);
-				color: #bbb;
-			}
-			.si {
-				width: 100%;
-				background: var(--canvas);
-				border: 1px solid var(--line);
-				border-radius: var(--r-sm);
-				padding: 8px 12px 8px 33px;
-				font-size: 13px;
-				color: var(--ink);
-				outline: none;
-				transition:
-					border-color 0.15s,
-					box-shadow 0.15s;
-			}
-			.si:focus {
-				border-color: var(--forest-mid);
-				box-shadow: 0 0 0 3px rgba(27, 58, 45, 0.08);
-			}
-			.si::placeholder {
-				color: #c0c0c0;
-			}
-			.kpi-row {
-				display: flex;
-				align-items: center;
-				gap: 18px;
-			}
-			.kpi {
-				text-align: right;
-				line-height: 1;
-			}
-			.kpi .v {
-				font-family: "Lora", serif;
-				font-size: 20px;
-				font-weight: 700;
-				color: var(--ink);
-				display: block;
-			}
-			.kpi .v.a {
-				color: var(--amber);
-			}
-			.kpi .v.g {
-				color: var(--teal);
-			}
-			.kpi .l {
-				font-size: 10px;
-				color: var(--ink-soft);
-				font-weight: 500;
-				display: block;
-				margin-top: 2px;
-			}
-			.ks {
-				width: 1px;
-				height: 30px;
-				background: var(--line);
-			}
-			.btn-p {
-				background: var(--crimson);
-				color: var(--white);
-				border: none;
-				border-radius: var(--r-sm);
-				padding: 9px 18px;
-				font-size: 13px;
-				font-weight: 600;
-				cursor: pointer;
-				display: flex;
-				align-items: center;
-				gap: 7px;
-				transition:
-					background 0.15s,
-					transform 0.1s;
-				white-space: nowrap;
-			}
-			.btn-p:hover {
-				background: #721a1a;
-			}
-			.btn-p:active {
-				transform: scale(0.98);
-			}
+/* FILTER BAR */
+.filter-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex:1;}
+.fsel-sm{background:var(--white);border:1px solid var(--line);border-radius:var(--r-sm);padding:6px 10px;font-size:12px;color:var(--ink);outline:none;cursor:pointer;transition:border-color .15s;}
+.fsel-sm:focus{border-color:var(--forest-mid);}
+.filter-label{font-size:11px;font-weight:600;color:var(--ink-soft);white-space:nowrap;}
+.clear-filters{background:none;border:1px solid var(--line);border-radius:var(--r-sm);padding:6px 10px;font-size:11px;font-weight:600;color:var(--ink-soft);cursor:pointer;transition:all .15s;}
+.clear-filters:hover{border-color:var(--crimson);color:var(--crimson);}
 
-			/* PIPELINE */
-			.board {
-				flex: 1;
-				padding: 18px 20px;
-				overflow-x: auto;
-				display: flex;
-				gap: 14px;
-				align-items: flex-start;
-				background: #eceeed;
-			}
-			.board.hidden {
-				display: none;
-			}
-			.scol {
-				width: 265px;
-				background: var(--white);
-				border-radius: var(--r-lg);
-				border: 1px solid var(--line);
-				display: flex;
-				flex-direction: column;
-				flex-shrink: 0;
-				overflow: hidden;
-				max-height: 100%;
-				box-shadow: var(--sh-sm);
-			}
-			.shd {
-				padding: 13px 15px;
-				border-bottom: 1px solid var(--line);
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				flex-shrink: 0;
-			}
-			.sl2 {
-				display: flex;
-				align-items: center;
-				gap: 8px;
-			}
-			.sdot {
-				width: 8px;
-				height: 8px;
-				border-radius: 50%;
-				flex-shrink: 0;
-			}
-			.stit {
-				font-size: 10.5px;
-				font-weight: 700;
-				letter-spacing: 0.04em;
-				text-transform: uppercase;
-				color: var(--ink-mid);
-			}
-			.scnt {
-				background: #f0f2ee;
-				color: var(--ink-mid);
-				font-size: 11px;
-				font-weight: 700;
-				width: 22px;
-				height: 22px;
-				border-radius: 50%;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-			}
-			.scards {
-				padding: 10px;
-				display: flex;
-				flex-direction: column;
-				gap: 8px;
-				overflow-y: auto;
-				flex: 1;
-			}
-			.empty {
-				border: 2px dashed #dde0db;
-				border-radius: var(--r);
-				min-height: 80px;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				font-size: 11px;
-				color: #bbb;
-				font-style: italic;
-			}
+.kpi-row{display:flex;align-items:center;gap:14px;margin-left:auto;}
+.kpi{text-align:right;line-height:1;}
+.kpi .v{font-family:"Lora",serif;font-size:18px;font-weight:700;color:var(--ink);display:block;}
+.kpi .v.a{color:var(--amber);}
+.kpi .v.g{color:var(--teal);}
+.kpi .l{font-size:10px;color:var(--ink-soft);font-weight:500;display:block;margin-top:2px;}
+.ks{width:1px;height:28px;background:var(--line);}
+.btn-p{background:var(--crimson);color:var(--white);border:none;border-radius:var(--r-sm);padding:8px 15px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:7px;transition:background .15s,transform .1s;white-space:nowrap;}
+.btn-p:hover{background:#721a1a;}
+.btn-p:active{transform:scale(.98);}
 
-			/* CARDS */
-			.card {
-				background: var(--white);
-				border: 1px solid var(--line);
-				border-radius: var(--r);
-				padding: 12px 13px;
-				cursor: pointer;
-				transition:
-					border-color 0.15s,
-					box-shadow 0.15s,
-					transform 0.1s;
-				display: flex;
-				flex-direction: column;
-				gap: 9px;
-			}
-			.card:hover {
-				border-color: var(--forest-mid);
-				box-shadow: var(--sh);
-				transform: translateY(-1px);
-			}
-			.card.lk {
-				background: #fdf8f8;
-				border-color: rgba(140, 32, 32, 0.15);
-			}
-			.card.lk:hover {
-				border-color: var(--crimson);
-			}
-			.ct {
-				display: flex;
-				align-items: flex-start;
-				justify-content: space-between;
-				gap: 8px;
-			}
-			.cn {
-				font-family: "Lora", serif;
-				font-size: 13px;
-				font-weight: 600;
-				color: var(--ink);
-				line-height: 1.2;
-			}
-			.cn.s {
-				text-decoration: line-through;
-				opacity: 0.5;
-			}
-			.sb {
-				font-size: 9px;
-				font-weight: 700;
-				padding: 3px 7px;
-				border-radius: 4px;
-				text-transform: uppercase;
-				letter-spacing: 0.05em;
-				white-space: nowrap;
-				flex-shrink: 0;
-				border: 1px solid transparent;
-			}
-			.sf2 {
-				background: #eef2ff;
-				color: #3730a3;
-				border-color: #c7d2fe;
-			}
-			.st {
-				background: var(--purple-lt);
-				color: var(--purple);
-				border-color: #d8cff7;
-			}
-			.sw2 {
-				background: #f3f4f6;
-				color: #374151;
-				border-color: #d1d5db;
-			}
-			.sr {
-				background: var(--gold-lt);
-				color: #92650a;
-				border-color: #e8d5a3;
-			}
-			.scores {
-				display: grid;
-				grid-template-columns: 1fr 1fr;
-				gap: 4px;
-			}
-			.chip {
-				background: var(--canvas);
-				border: 1px solid var(--line);
-				border-radius: var(--r-sm);
-				padding: 5px 8px;
-				font-size: 10px;
-				font-weight: 600;
-				color: var(--ink-mid);
-			}
-			.chip span {
-				font-weight: 700;
-				color: var(--ink);
-			}
-			.dbw {
-				display: flex;
-				flex-direction: column;
-				gap: 4px;
-			}
-			.dbl {
-				display: flex;
-				justify-content: space-between;
-				font-size: 9.5px;
-				font-weight: 600;
-				color: var(--ink-soft);
-			}
-			.dbt {
-				height: 3px;
-				background: #eaecea;
-				border-radius: 2px;
-				overflow: hidden;
-			}
-			.dbf {
-				height: 100%;
-				background: var(--forest-mid);
-				border-radius: 2px;
-				transition: width 0.4s;
-			}
-			.cf {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				border-top: 1px solid #f0f2ee;
-				padding-top: 8px;
-			}
-			.ht {
-				font-size: 10px;
-				color: var(--ink-soft);
-				font-weight: 500;
-			}
-			.mb {
-				font-size: 9px;
-				font-weight: 700;
-				padding: 3px 8px;
-				border-radius: 4px;
-				text-transform: uppercase;
-				letter-spacing: 0.04em;
-				border: 1px solid transparent;
-			}
-			.mp {
-				background: var(--amber-lt);
-				color: var(--amber);
-				border-color: #ead6a0;
-			}
-			.mc {
-				background: var(--teal-lt);
-				color: var(--teal);
-				border-color: #a8d9cd;
-			}
-			.mf {
-				background: var(--crimson-lt);
-				color: var(--crimson);
-				border-color: rgba(140, 32, 32, 0.2);
-			}
+/* BOARD */
+.board{flex:1;padding:16px 18px;overflow-x:auto;display:flex;gap:12px;align-items:flex-start;background:#eceeed;}
+.board.hidden{display:none;}
+.scol{width:255px;background:var(--white);border-radius:var(--r-lg);border:1px solid var(--line);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden;max-height:100%;box-shadow:var(--sh-sm);}
+.shd{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.sl2{display:flex;align-items:center;gap:8px;}
+.sdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.stit{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-mid);}
+.scnt{background:#f0f2ee;color:var(--ink-mid);font-size:11px;font-weight:700;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.scards{padding:8px;display:flex;flex-direction:column;gap:7px;overflow-y:auto;flex:1;}
+.empty{border:2px dashed #dde0db;border-radius:var(--r);min-height:70px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#bbb;font-style:italic;}
 
-			/* DATABASE */
-			.dbview {
-				flex: 1;
-				padding: 22px 24px;
-				overflow-y: auto;
-				background: var(--white);
-				display: none;
-				flex-direction: column;
-			}
-			.dbview.visible {
-				display: flex;
-			}
-			.dbh {
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				margin-bottom: 14px;
-			}
-			.dbt2 {
-				font-family: "Lora", serif;
-				font-size: 16px;
-				font-weight: 600;
-				color: var(--ink);
-			}
-			.dbs {
-				font-size: 11px;
-				color: var(--ink-soft);
-				margin-top: 2px;
-			}
-			.tw {
-				border: 1px solid var(--line);
-				border-radius: var(--r);
-				overflow: hidden;
-				flex: 1;
-			}
-			table {
-				width: 100%;
-				border-collapse: collapse;
-				font-size: 12.5px;
-			}
-			thead tr {
-				background: var(--canvas);
-				border-bottom: 1px solid var(--line);
-			}
-			th {
-				padding: 11px 14px;
-				font-size: 10px;
-				font-weight: 700;
-				letter-spacing: 0.05em;
-				text-transform: uppercase;
-				color: var(--ink-soft);
-				text-align: left;
-				white-space: nowrap;
-			}
-			tbody tr {
-				border-bottom: 1px solid #f3f5f1;
-				cursor: pointer;
-				transition: background 0.12s;
-			}
-			tbody tr:hover {
-				background: var(--forest-xs);
-			}
-			td {
-				padding: 12px 14px;
-				color: var(--ink-mid);
-			}
-			td:first-child {
-				font-weight: 600;
-				color: var(--ink);
-				font-family: "Lora", serif;
-			}
+/* CARDS */
+.card{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:11px 12px;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .1s;display:flex;flex-direction:column;gap:8px;}
+.card:hover{border-color:var(--forest-mid);box-shadow:var(--sh);transform:translateY(-1px);}
+.card.lk{background:#fdf8f8;border-color:rgba(140,32,32,.15);}
+.card.lk:hover{border-color:var(--crimson);}
+.ct{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+.cn{font-family:"Lora",serif;font-size:13px;font-weight:600;color:var(--ink);line-height:1.2;}
+.cn.s{text-decoration:line-through;opacity:.5;}
+.cn-sub{font-size:10px;color:var(--ink-soft);font-weight:500;margin-top:2px;}
+.sb{font-size:9px;font-weight:700;padding:3px 7px;border-radius:4px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;flex-shrink:0;border:1px solid transparent;}
+.sf2{background:#eef2ff;color:#3730a3;border-color:#c7d2fe;}
+.st{background:var(--purple-lt);color:var(--purple);border-color:#d8cff7;}
+.sw2{background:#f3f4f6;color:#374151;border-color:#d1d5db;}
+.sr{background:var(--gold-lt);color:#92650a;border-color:#e8d5a3;}
+.scores{display:grid;grid-template-columns:1fr 1fr;gap:4px;}
+.chip{background:var(--canvas);border:1px solid var(--line);border-radius:var(--r-sm);padding:4px 7px;font-size:10px;font-weight:600;color:var(--ink-mid);}
+.chip span{font-weight:700;color:var(--ink);}
+.chip span.pass{color:var(--teal);}
+.chip span.fail{color:var(--crimson);}
+.dbw{display:flex;flex-direction:column;gap:3px;}
+.dbl{display:flex;justify-content:space-between;font-size:9.5px;font-weight:600;color:var(--ink-soft);}
+.dbt{height:3px;background:#eaecea;border-radius:2px;overflow:hidden;}
+.dbf{height:100%;background:var(--forest-mid);border-radius:2px;transition:width .4s;}
+.cf{display:flex;align-items:center;justify-content:flex-end;border-top:1px solid #f0f2ee;padding-top:7px;}
+.mb{font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.04em;border:1px solid transparent;}
+.mp{background:var(--amber-lt);color:var(--amber);border-color:#ead6a0;}
+.mc{background:var(--teal-lt);color:var(--teal);border-color:#a8d9cd;}
+.mf{background:var(--crimson-lt);color:var(--crimson);border-color:rgba(140,32,32,.2);}
 
-			/* OVERLAY */
-			.ov {
-				position: fixed;
-				inset: 0;
-				background: rgba(27, 58, 45, 0.5);
-				backdrop-filter: blur(4px);
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				z-index: 60;
-				padding: 16px;
-			}
-			.ov.hidden {
-				display: none;
-			}
-			.mbox {
-				background: var(--white);
-				border-radius: var(--r-lg);
-				box-shadow: var(--sh-lg);
-				width: 100%;
-				max-width: 480px;
-				overflow: hidden;
-				display: flex;
-				flex-direction: column;
-				animation: modalIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-			}
-			.mhd {
-				background: var(--forest);
-				padding: 18px 22px;
-				display: flex;
-				align-items: flex-start;
-				justify-content: space-between;
-			}
-			.mhd .mt {
-				font-family: "Lora", serif;
-				font-size: 16px;
-				font-weight: 600;
-				color: var(--white);
-				line-height: 1.2;
-			}
-			.mhd .ms {
-				font-size: 11px;
-				color: rgba(110, 200, 149, 0.8);
-				margin-top: 4px;
-			}
-			.mclose {
-				background: none;
-				border: none;
-				color: rgba(255, 255, 255, 0.5);
-				font-size: 22px;
-				cursor: pointer;
-				line-height: 1;
-				padding: 0;
-				margin-top: -2px;
-			}
-			.mclose:hover {
-				color: var(--white);
-			}
-			.mbody {
-				padding: 20px 22px;
-				display: flex;
-				flex-direction: column;
-				gap: 14px;
-			}
-			.mfot {
-				background: var(--canvas);
-				padding: 13px 22px;
-				border-top: 1px solid var(--line);
-				display: flex;
-				align-items: center;
-				justify-content: flex-end;
-				gap: 8px;
-			}
+/* DATABASE VIEW */
+.dbview{flex:1;padding:20px 22px;overflow-y:auto;background:var(--white);display:none;flex-direction:column;}
+.dbview.visible{display:flex;}
+.dbh{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.dbt2{font-family:"Lora",serif;font-size:16px;font-weight:600;color:var(--ink);}
+.dbs{font-size:11px;color:var(--ink-soft);margin-top:2px;}
+.tw{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;flex:1;}
+table{width:100%;border-collapse:collapse;font-size:12.5px;}
+thead tr{background:var(--canvas);border-bottom:1px solid var(--line);}
+th{padding:10px 13px;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);text-align:left;white-space:nowrap;}
+tbody tr{border-bottom:1px solid #f3f5f1;cursor:pointer;transition:background .12s;}
+tbody tr:hover{background:var(--forest-xs);}
+td{padding:11px 13px;color:var(--ink-mid);}
+td:first-child{font-weight:600;color:var(--ink);font-family:"Lora",serif;}
 
-			/* DUP WARNING */
-			.dw {
-				background: #fdf1f1;
-				border: 1px solid rgba(140, 32, 32, 0.2);
-				border-radius: var(--r-sm);
-				padding: 12px 14px;
-				display: flex;
-				gap: 10px;
-				align-items: flex-start;
-			}
-			.dw.hidden {
-				display: none;
-			}
-			.dw svg {
-				color: var(--crimson);
-				flex-shrink: 0;
-				margin-top: 1px;
-			}
-			.dw .wt {
-				font-size: 11px;
-				font-weight: 700;
-				color: var(--crimson);
-				margin-bottom: 3px;
-			}
-			.dw .wb {
-				font-size: 11px;
-				color: var(--ink-mid);
-				line-height: 1.4;
-			}
+/* MODAL */
+.ov{position:fixed;inset:0;background:rgba(27,58,45,.5);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:60;padding:16px;}
+.ov.hidden{display:none;}
+.mbox{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--sh-lg);width:100%;max-width:520px;overflow:hidden;display:flex;flex-direction:column;animation:modalIn .22s cubic-bezier(.16,1,.3,1);max-height:92vh;}
+.mhd{background:var(--forest);padding:16px 22px;display:flex;align-items:flex-start;justify-content:space-between;flex-shrink:0;}
+.mhd .mt{font-family:"Lora",serif;font-size:15px;font-weight:600;color:var(--white);line-height:1.2;}
+.mhd .ms{font-size:11px;color:rgba(110,200,149,.8);margin-top:4px;}
+.mclose{background:none;border:none;color:rgba(255,255,255,.5);font-size:22px;cursor:pointer;line-height:1;padding:0;margin-top:-2px;}
+.mclose:hover{color:var(--white);}
+.mbody{padding:18px 22px;display:flex;flex-direction:column;gap:12px;flex:1;overflow-y:auto;min-height:0;}
+.mfot{background:var(--canvas);padding:12px 22px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-shrink:0;}
+.dw{background:#fdf1f1;border:1px solid rgba(140,32,32,.2);border-radius:var(--r-sm);padding:11px 13px;display:flex;gap:10px;align-items:flex-start;}
+.dw.hidden{display:none;}
+.dw svg{color:var(--crimson);flex-shrink:0;margin-top:1px;}
+.dw .wt{font-size:11px;font-weight:700;color:var(--crimson);margin-bottom:3px;}
+.dw .wb{font-size:11px;color:var(--ink-mid);line-height:1.4;}
+.fld{display:flex;flex-direction:column;gap:4px;}
+.flbl{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);}
+.fi,.fsel,.fta{background:var(--canvas);border:1px solid var(--line);border-radius:var(--r-sm);padding:8px 11px;font-size:13px;color:var(--ink);font-family:inherit;font-weight:500;outline:none;transition:border-color .15s,box-shadow .15s;width:100%;}
+.fi:focus,.fsel:focus,.fta:focus{border-color:var(--forest-mid);box-shadow:0 0 0 3px rgba(27,58,45,.08);}
+.fta{resize:vertical;min-height:68px;line-height:1.5;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;}
+.btn-g{background:none;border:none;cursor:pointer;font-size:13px;font-weight:600;color:var(--ink-soft);padding:8px 14px;border-radius:var(--r-sm);transition:background .15s;}
+.btn-g:hover{background:var(--line);}
+.btn-f{background:var(--forest);color:var(--white);border:none;border-radius:var(--r-sm);padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s;}
+.btn-f:hover{background:var(--forest-mid);}
+.btn-d{background:none;border:none;color:var(--crimson);font-size:12px;font-weight:600;padding:8px 12px;border-radius:var(--r-sm);cursor:pointer;transition:background .15s;}
+.btn-d:hover{background:var(--crimson-lt);}
+.btn-d.hidden{display:none;}
 
-			/* FORM */
-			.fld {
-				display: flex;
-				flex-direction: column;
-				gap: 5px;
-			}
-			.flbl {
-				font-size: 10px;
-				font-weight: 700;
-				letter-spacing: 0.05em;
-				text-transform: uppercase;
-				color: var(--ink-soft);
-			}
-			.fi,
-			.fsel {
-				background: var(--canvas);
-				border: 1px solid var(--line);
-				border-radius: var(--r-sm);
-				padding: 9px 12px;
-				font-size: 13px;
-				color: var(--ink);
-				font-family: inherit;
-				font-weight: 500;
-				outline: none;
-				transition:
-					border-color 0.15s,
-					box-shadow 0.15s;
-				width: 100%;
-			}
-			.fi:focus,
-			.fsel:focus {
-				border-color: var(--forest-mid);
-				box-shadow: 0 0 0 3px rgba(27, 58, 45, 0.08);
-			}
-			.g2 {
-				display: grid;
-				grid-template-columns: 1fr 1fr;
-				gap: 12px;
-			}
-			.btn-g {
-				background: none;
-				border: none;
-				cursor: pointer;
-				font-size: 13px;
-				font-weight: 600;
-				color: var(--ink-soft);
-				padding: 8px 14px;
-				border-radius: var(--r-sm);
-				transition: background 0.15s;
-			}
-			.btn-g:hover {
-				background: var(--line);
-			}
-			.btn-f {
-				background: var(--forest);
-				color: var(--white);
-				border: none;
-				border-radius: var(--r-sm);
-				padding: 9px 18px;
-				font-size: 13px;
-				font-weight: 600;
-				cursor: pointer;
-				transition: background 0.15s;
-			}
-			.btn-f:hover {
-				background: var(--forest-mid);
-			}
-			.btn-d {
-				background: none;
-				border: none;
-				color: var(--crimson);
-				font-size: 12px;
-				font-weight: 600;
-				padding: 8px 12px;
-				border-radius: var(--r-sm);
-				cursor: pointer;
-				transition: background 0.15s;
-			}
-			.btn-d:hover {
-				background: var(--crimson-lt);
-			}
-			.btn-d.hidden {
-				display: none;
-			}
+.dhd{background:var(--forest);padding:16px 22px;display:flex;align-items:flex-start;justify-content:space-between;flex-shrink:0;}
+.dhd .dt{font-family:"Lora",serif;font-size:15px;font-weight:600;color:var(--white);}
+.dhd .ds{font-size:11px;color:rgba(110,200,149,.8);margin-top:4px;}
+/* DRAWER SCROLL FIX */
+.drawer{position:fixed;top:0;bottom:0;right:0;width:420px;background:var(--white);border-left:1px solid var(--line);box-shadow:var(--sh-lg);transform:translateX(100%);transition:transform .3s cubic-bezier(.16,1,.3,1);z-index:50;display:flex;flex-direction:column;}
+.drawer.open{transform:translateX(0);}
+.dbody{flex:1;overflow-y:auto;min-height:0;padding:16px;}
+.dsect{margin-bottom:18px;}
+.dsect:last-child{margin-bottom:0;}
+.dsect-t{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-soft);border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+.man-tag{background:var(--canvas);border:1px solid var(--line);color:var(--ink-soft);font-size:9px;font-weight:600;padding:2px 6px;border-radius:4px;}
+.ib{background:var(--canvas);border:1px solid var(--line);border-radius:var(--r-sm);padding:9px 11px;font-size:11px;color:var(--ink-mid);line-height:1.7;}
+.ib strong{color:var(--ink);font-weight:600;}
+.chklist{display:flex;flex-direction:column;gap:5px;}
+.ci{display:flex;align-items:center;gap:10px;padding:8px 11px;background:var(--canvas);border:1px solid var(--line);border-radius:var(--r-sm);cursor:pointer;transition:border-color .15s,background .15s;font-size:12px;font-weight:500;color:var(--ink-mid);}
+.ci:hover{border-color:var(--forest-mid);background:var(--forest-xs);}
+.ci input[type="checkbox"]{width:14px;height:14px;cursor:pointer;accent-color:var(--forest);}
+.dfot{padding:12px 18px;border-top:1px solid var(--line);background:var(--canvas);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.dfot-r{display:flex;align-items:center;gap:8px;}
+.drawer-stage-panels{}
+.drawer-stage-panels>div{display:none;}
+.drawer-stage-panels>div.active-panel{display:block;}
 
-			/* DRAWER */
-			.drawer {
-				position: fixed;
-				inset-y: 0;
-				right: 0;
-				width: 370px;
-				background: var(--white);
-				border-left: 1px solid var(--line);
-				box-shadow: var(--sh-lg);
-				transform: translateX(100%);
-				transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-				z-index: 50;
-				display: flex;
-				flex-direction: column;
-			}
-			.drawer.open {
-				transform: translateX(0);
-			}
-			.dhd {
-				background: var(--forest);
-				padding: 18px 22px;
-				display: flex;
-				align-items: flex-start;
-				justify-content: space-between;
-				flex-shrink: 0;
-			}
-			.dhd .dt {
-				font-family: "Lora", serif;
-				font-size: 15px;
-				font-weight: 600;
-				color: var(--white);
-			}
-			.dhd .ds {
-				font-size: 11px;
-				color: rgba(110, 200, 149, 0.8);
-				margin-top: 4px;
-			}
-			.dbody {
-				flex: 1;
-				overflow-y: auto;
-				padding: 18px;
-				display: flex;
-				flex-direction: column;
-				gap: 20px;
-			}
-			.dsect {
-			}
-			.dsect-t {
-				font-size: 10px;
-				font-weight: 700;
-				letter-spacing: 0.07em;
-				text-transform: uppercase;
-				color: var(--ink-soft);
-				border-bottom: 1px solid var(--line);
-				padding-bottom: 7px;
-				margin-bottom: 11px;
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-			}
-			.man-tag {
-				background: var(--canvas);
-				border: 1px solid var(--line);
-				color: var(--ink-soft);
-				font-size: 9px;
-				font-weight: 600;
-				padding: 2px 6px;
-				border-radius: 4px;
-			}
-			.ib {
-				background: var(--canvas);
-				border: 1px solid var(--line);
-				border-radius: var(--r-sm);
-				padding: 10px 12px;
-				font-size: 11px;
-				color: var(--ink-mid);
-				line-height: 1.7;
-			}
-			.ib strong {
-				color: var(--ink);
-				font-weight: 600;
-			}
-			.chklist {
-				display: flex;
-				flex-direction: column;
-				gap: 6px;
-			}
-			.ci {
-				display: flex;
-				align-items: center;
-				gap: 10px;
-				padding: 9px 12px;
-				background: var(--canvas);
-				border: 1px solid var(--line);
-				border-radius: var(--r-sm);
-				cursor: pointer;
-				transition:
-					border-color 0.15s,
-					background 0.15s;
-				font-size: 12.5px;
-				font-weight: 500;
-				color: var(--ink-mid);
-			}
-			.ci:hover {
-				border-color: var(--forest-mid);
-				background: var(--forest-xs);
-			}
-			.ci input[type="checkbox"] {
-				width: 15px;
-				height: 15px;
-				cursor: pointer;
-				accent-color: var(--forest);
-			}
-			.dfot {
-				padding: 13px 18px;
-				border-top: 1px solid var(--line);
-				background: var(--canvas);
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				flex-shrink: 0;
-			}
-			.dfot-r {
-				display: flex;
-				align-items: center;
-				gap: 8px;
-			}
+/* TATTOO / REMARKS SECTION */
+.remarks-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.remark-check{display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--canvas);border:1px solid var(--line);border-radius:var(--r-sm);cursor:pointer;font-size:11.5px;font-weight:500;color:var(--ink-mid);transition:border-color .15s,background .15s;}
+.remark-check:hover{border-color:var(--forest-mid);background:var(--forest-xs);}
+.remark-check input{width:14px;height:14px;accent-color:var(--forest);}
+.remark-check.warn-flag{border-color:rgba(140,32,32,.2);background:var(--crimson-lt);}
+.remark-check.warn-flag input{accent-color:var(--crimson);}
 
-			/* AUDIT */
-			.abox {
-				max-width: 620px;
-			}
-			.ahd {
-				background: #111827;
-				padding: 18px 22px;
-				display: flex;
-				justify-content: space-between;
-				align-items: flex-start;
-			}
-			.ahd .at {
-				font-size: 14px;
-				font-weight: 700;
-				color: var(--white);
-				display: flex;
-				align-items: center;
-				gap: 8px;
-			}
-			.ahd .as {
-				font-size: 11px;
-				color: #6b7280;
-				margin-top: 4px;
-			}
-			.aterm {
-				background: #0d1117;
-				padding: 16px;
-				height: 280px;
-				overflow-y: auto;
-				font-family: "Courier New", monospace;
-				font-size: 11px;
-				line-height: 1.7;
-				color: #4ade80;
-			}
-			.afot {
-				background: #111827;
-				padding: 11px 20px;
-				display: flex;
-				justify-content: flex-end;
-			}
-			.btn-dk {
-				background: #1f2937;
-				color: var(--white);
-				border: none;
-				border-radius: var(--r-sm);
-				padding: 8px 16px;
-				font-size: 12px;
-				font-weight: 600;
-				cursor: pointer;
-				transition: background 0.15s;
-			}
-			.btn-dk:hover {
-				background: #374151;
-			}
+/* AUDIT MODAL */
+.abox{max-width:620px;}
+.ahd{background:#111827;padding:16px 22px;display:flex;justify-content:space-between;align-items:flex-start;}
+.ahd .at{font-size:14px;font-weight:700;color:var(--white);display:flex;align-items:center;gap:8px;}
+.ahd .as{font-size:11px;color:#6b7280;margin-top:4px;}
+.aterm{background:#0d1117;padding:14px;height:280px;overflow-y:auto;font-family:"Courier New",monospace;font-size:11px;line-height:1.7;color:#4ade80;}
+.afot{background:#111827;padding:10px 20px;display:flex;justify-content:flex-end;}
+.btn-dk{background:#1f2937;color:var(--white);border:none;border-radius:var(--r-sm);padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer;transition:background .15s;}
+.btn-dk:hover{background:#374151;}
 
-			/* TOAST */
-			#tc {
-				position: fixed;
-				bottom: 20px;
-				right: 20px;
-				z-index: 999;
-				display: flex;
-				flex-direction: column;
-				gap: 7px;
-				pointer-events: none;
-			}
-			.toast {
-				background: #1a1a1a;
-				color: var(--white);
-				border-radius: 10px;
-				box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-				padding: 12px 15px;
-				display: flex;
-				gap: 10px;
-				align-items: flex-start;
-				width: 290px;
-				opacity: 0;
-				transform: translateY(10px);
-				transition:
-					opacity 0.25s,
-					transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-			}
-			.toast.show {
-				opacity: 1;
-				transform: translateY(0);
-			}
-			.toast.err {
-				background: #2d0a0a;
-				border: 1px solid rgba(220, 80, 80, 0.25);
-			}
-			.toast.warn {
-				background: #1e1500;
-				border: 1px solid rgba(192, 138, 48, 0.25);
-			}
-			.ti {
-				font-size: 13px;
-				margin-top: 1px;
-				flex-shrink: 0;
-			}
-			.tt {
-				font-size: 11px;
-				font-weight: 700;
-				letter-spacing: 0.03em;
-				margin-bottom: 2px;
-			}
-			.tm {
-				font-size: 11px;
-				color: rgba(255, 255, 255, 0.6);
-				line-height: 1.4;
-			}
-		</style>
-	</head>
-	<body>
-		<header class="topbar">
-			<div class="topbar-left">
-				<span class="loc-label">
-					<svg
-						width="13"
-						height="13"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"
-						/>
-					</svg>
-					Manggahan, General Trias, Cavite
-				</span>
-			</div>
-			<div class="topbar-right">
-				<div class="role-sw">
-					<button id="roleStaffBtn" class="role-btn active" onclick="setRole('Staff')">
-						Recruitment Staff
-					</button>
-					<button id="roleSupervisorBtn" class="role-btn" onclick="setRole('Supervisor')">
-						Supervisor
-					</button>
-				</div>
-				<div class="dv"></div>
-				<div class="avatar">U</div>
-				<div class="user-meta">
-					<span class="name" id="userDisplay">Recruiter View</span>
-					<span class="role" id="roleSubtext">Staff Account</span>
-				</div>
-			</div>
-		</header>
+/* TOAST */
+#tc{position:fixed;bottom:20px;right:20px;z-index:999;display:flex;flex-direction:column;gap:7px;pointer-events:none;}
+.toast{background:#1a1a1a;color:var(--white);border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.2);padding:11px 14px;display:flex;gap:10px;align-items:flex-start;width:280px;opacity:0;transform:translateY(10px);transition:opacity .25s,transform .25s cubic-bezier(.16,1,.3,1);}
+.toast.show{opacity:1;transform:translateY(0);}
+.toast.err{background:#2d0a0a;border:1px solid rgba(220,80,80,.25);}
+.toast.warn{background:#1e1500;border:1px solid rgba(192,138,48,.25);}
+.ti{font-size:13px;margin-top:1px;flex-shrink:0;}
+.tt{font-size:11px;font-weight:700;letter-spacing:.03em;margin-bottom:2px;}
+.tm{font-size:11px;color:rgba(255,255,255,.6);line-height:1.4;}
+.score-tag{font-size:9px;font-weight:700;padding:3px 8px;border-radius:4px;border:1px solid transparent;text-transform:uppercase;display:inline-block;}
+.score-pass{background:var(--teal-lt);color:var(--teal);border-color:#a8d9cd;}
+.score-fail{background:var(--crimson-lt);color:var(--crimson);border-color:rgba(140,32,32,.2);}
 
-		<div class="app-body">
-			<aside class="sidebar">
-				<div>
-					<div class="brand">
-						<div class="brand-icon">F</div>
-						<div>
-							<span class="brand-name">FAMSync</span>
-							<span class="brand-sub">Applicant Tracking</span>
-						</div>
-					</div>
-					<nav class="nav">
-						<button
-							class="nav-item active"
-							id="nav-pipeline"
-							onclick="switchTab('pipeline')"
-						>
-							<svg
-								width="15"
-								height="15"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z"
-								/>
-							</svg>
-							Candidate Pipeline
-						</button>
-						<button class="nav-item" id="nav-database" onclick="switchTab('database')">
-							<svg
-								width="15"
-								height="15"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"
-								/>
-							</svg>
-							All Candidates
-						</button>
-						<button class="nav-item" onclick="openEnrollmentModal()">
-							<svg
-								width="15"
-								height="15"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
-								/>
-							</svg>
-							Add New Applicant
-						</button>
-						<div class="nav-sec">
-							Supervisor Tools <span class="lock-tag">Locked</span>
-						</div>
-						<button
-							id="nav-analytics"
-							class="nav-item locked"
-							onclick="generateReport()"
-						>
-							<svg
-								width="15"
-								height="15"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-								/>
-							</svg>
-							Sourcing Report (PDF)
-						</button>
-						<button id="nav-logs" class="nav-item locked" onclick="toggleAuditTrail()">
-							<svg
-								width="15"
-								height="15"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-								/>
-							</svg>
-							Activity Log
-						</button>
-					</nav>
-				</div>
-			</aside>
+/* ORIENTATION INFO BOX */
+.orient-info{background:var(--forest-xs);border:1px solid rgba(27,58,45,.15);border-radius:var(--r-sm);padding:10px 12px;font-size:11.5px;color:var(--forest);line-height:1.6;}
+.orient-info strong{font-weight:700;}
 
-			<main class="main">
-				<div class="ctrlbar">
-					<div class="sw">
-						<svg
-							width="14"
-							height="14"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-							/>
-						</svg>
-						<input
-							id="globalSearchBar"
-							class="si"
-							type="text"
-							oninput="executeSearchFilter(this.value)"
-							placeholder="Search by name, handler, or source&hellip;"
-						/>
-					</div>
-					<div class="kpi-row">
-						<div class="kpi">
-							<span class="v" id="kpiSourced">0</span
-							><span class="l">Total Active</span>
-						</div>
-						<div class="ks"></div>
-						<div class="kpi">
-							<span class="v a" id="kpiPending">0</span
-							><span class="l">Pending Medical</span>
-						</div>
-						<div class="ks"></div>
-						<div class="kpi">
-							<span class="v g" id="kpiCleared">0</span
-							><span class="l">Deployed</span>
-						</div>
-						<div class="ks"></div>
-						<button class="btn-p" onclick="openEnrollmentModal()">
-							<svg
-								width="14"
-								height="14"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M12 4v16m8-8H4"
-								/>
-							</svg>
-							Add Applicant
-						</button>
-					</div>
-				</div>
+/* SECTION DIVIDER */
+.sect-note{font-size:11px;color:var(--ink-soft);font-style:italic;margin-bottom:8px;}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-left">
+    <span class="loc-label">
+      <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      Manggahan, General Trias, Cavite &nbsp;&bull;&nbsp; JAE Philippines Inc.
+    </span>
+  </div>
+  <div class="topbar-right">
+    <div class="role-sw">
+      <button id="roleStaffBtn" class="role-btn active" onclick="setRole('Staff')">Recruitment Staff</button>
+      <button id="roleSupervisorBtn" class="role-btn" onclick="setRole('Supervisor')">Supervisor</button>
+    </div>
+    <div class="dv"></div>
+    <div class="avatar">U</div>
+    <div class="user-meta">
+      <span class="name" id="userDisplay">Recruiter View</span>
+      <span class="role" id="roleSubtext">Staff Account</span>
+    </div>
+  </div>
+</header>
 
-				<div class="board" id="tabContent-pipeline">
-					<div class="scol">
-						<div class="shd">
-							<div class="sl2">
-								<div class="sdot" style="background: #94a3b8"></div>
-								<span class="stit">Sourced / Invited</span>
-							</div>
-							<span class="scnt" id="badge-stage-1">0</span>
-						</div>
-						<div class="scards" id="stage-col-1"></div>
-					</div>
-					<div class="scol">
-						<div class="shd">
-							<div class="sl2">
-								<div class="sdot" style="background: #3b82f6"></div>
-								<span class="stit">On-Site Screening</span>
-							</div>
-							<span class="scnt" id="badge-stage-2">0</span>
-						</div>
-						<div class="scards" id="stage-col-2"></div>
-					</div>
-					<div class="scol">
-						<div class="shd">
-							<div class="sl2">
-								<div
-									class="sdot"
-									style="background: #f59e0b; animation: pulse 2s infinite"
-								></div>
-								<span class="stit">Medical &amp; Compliance</span>
-							</div>
-							<span class="scnt" id="badge-stage-3">0</span>
-						</div>
-						<div
-							class="scards"
-							id="stage-col-3"
-							style="background: rgba(245, 158, 11, 0.015)"
-						></div>
-					</div>
-					<div class="scol">
-						<div class="shd">
-							<div class="sl2">
-								<div class="sdot" style="background: #8b5cf6"></div>
-								<span class="stit">Pool / Reserved</span>
-							</div>
-							<span class="scnt" id="badge-stage-4">0</span>
-						</div>
-						<div class="scards" id="stage-col-4"></div>
-					</div>
-					<div class="scol">
-						<div class="shd">
-							<div class="sl2">
-								<div class="sdot" style="background: #059669"></div>
-								<span class="stit">Deployed</span>
-							</div>
-							<span class="scnt" id="badge-stage-5">0</span>
-						</div>
-						<div
-							class="scards"
-							id="stage-col-5"
-							style="background: rgba(5, 150, 105, 0.015)"
-						></div>
-					</div>
-				</div>
+<div class="app-body">
+  <aside class="sidebar">
+    <div>
+      <div class="brand">
+        <div><span class="brand-name">FAMSync</span><span class="brand-sub">Applicant Tracking</span></div>
+      </div>
+      <nav class="nav">
+        <button class="nav-item active" id="nav-pipeline" onclick="switchTab('pipeline')">
+          <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z"/></svg>
+          Candidate Pipeline
+        </button>
+        <button class="nav-item" id="nav-database" onclick="switchTab('database')">
+          <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg>
+          All Candidates
+        </button>
+        <button class="nav-item" onclick="openEnrollmentModal()">
+          <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+          Add New Applicant
+        </button>
+        <div class="nav-sec">Supervisor Tools <span class="lock-tag">Locked</span></div>
+        <button id="nav-analytics" class="nav-item locked" onclick="generateReport()">
+          <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Sourcing Report (PDF)
+        </button>
+        <button id="nav-logs" class="nav-item locked" onclick="toggleAuditTrail()">
+          <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Activity Log
+        </button>
+      </nav>
+    </div>
+  </aside>
 
-				<div class="dbview" id="tabContent-database">
-					<div class="dbh">
-						<div>
-							<div class="dbt2">All Candidates</div>
-							<div class="dbs">
-								Complete list of all applicants across every stage
-							</div>
-						</div>
-					</div>
-					<div class="tw">
-						<table>
-							<thead>
-								<tr>
-									<th>Name</th>
-									<th>Source</th>
-									<th>Handler</th>
-									<th>Assessment</th>
-									<th>Medical</th>
-									<th>Documents</th>
-									<th>Stage</th>
-								</tr>
-							</thead>
-							<tbody id="databaseTableBody"></tbody>
-						</table>
-					</div>
-				</div>
-			</main>
-		</div>
+  <main class="main">
+    <!-- CTRL BAR with filters -->
+    <div class="ctrlbar">
+      <div class="search-wrap">
+        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input id="globalSearchBar" class="si" type="text" oninput="applyAllFilters()" placeholder="Search by name or source…"/>
+      </div>
+      <div class="filter-bar">
+        <span class="filter-label">Filter:</span>
+        <select id="filterStage" class="fsel-sm" onchange="applyAllFilters()">
+          <option value="">All Stages</option>
+          <option value="1">Stage 1 – Sourced</option>
+          <option value="2">Stage 2 – Screening</option>
+          <option value="3">Stage 3 – Medical</option>
+          <option value="4">Stage 4 – Orientation</option>
+          <option value="5">Stage 5 – Deployed</option>
+        </select>
+        <select id="filterSource" class="fsel-sm" onchange="applyAllFilters()">
+          <option value="">All Sources</option>
+          <option value="Facebook">Facebook</option>
+          <option value="Walk-In">Walk-In</option>
+          <option value="Referral">Referral</option>
+          <option value="TikTok Live">TikTok Live</option>
+        </select>
+        <select id="filterGender" class="fsel-sm" onchange="applyAllFilters()">
+          <option value="">All Genders</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+        <select id="filterMedical" class="fsel-sm" onchange="applyAllFilters()">
+          <option value="">All Medical</option>
+          <option value="Pending">Pending</option>
+          <option value="Cleared">Cleared</option>
+          <option value="Failed">Failed</option>
+        </select>
+        <button class="clear-filters" onclick="clearAllFilters()">✕ Clear</button>
+      </div>
+      <div class="kpi-row">
+        <div class="kpi"><span class="v" id="kpiSourced">0</span><span class="l">Total Active</span></div>
+        <div class="ks"></div>
+        <div class="kpi"><span class="v a" id="kpiPending">0</span><span class="l">Pending Medical</span></div>
+        <div class="ks"></div>
+        <div class="kpi"><span class="v g" id="kpiCleared">0</span><span class="l">Deployed</span></div>
+        <div class="ks"></div>
+        <button class="btn-p" onclick="openEnrollmentModal()">
+          <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          Add Applicant
+        </button>
+      </div>
+    </div>
 
-		<!-- ENROLLMENT MODAL -->
-		<div id="enrollmentModal" class="ov hidden">
-			<div class="mbox">
-				<div class="mhd">
-					<div>
-						<div class="mt">Add New Applicant</div>
-						<div class="ms">Capture walk-in or online sourced leads</div>
-					</div>
-					<button class="mclose" onclick="closeEnrollmentModal()">&times;</button>
-				</div>
-				<form id="enrollmentForm" onsubmit="commitCandidateEnrollment(event)">
-					<div class="mbody">
-						<div id="duplicateWarning" class="dw hidden">
-							<svg
-								width="16"
-								height="16"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-								/>
-							</svg>
-							<div>
-								<div class="wt">Duplicate Name Detected</div>
-								<div class="wb">
-									An applicant with this name already exists. Verify before
-									continuing.
-								</div>
-							</div>
-						</div>
-						<div class="fld">
-							<label class="flbl">Full Name</label>
-							<input
-								id="inputName"
-								class="fi"
-								type="text"
-								required
-								oninput="interceptDuplicateInput(this.value)"
-								placeholder="e.g. Elena Santos"
-							/>
-						</div>
-						<div class="g2">
-							<div class="fld">
-								<label class="flbl">Source Channel</label>
-								<select id="inputSource" class="fsel">
-									<option value="Facebook">Facebook</option>
-									<option value="Walk-In">Walk-In</option>
-									<option value="Referral">Referral</option>
-								</select>
-							</div>
-							<div class="fld">
-								<label class="flbl">Assigned Handler</label>
-								<select id="inputHandler" class="fsel">
-									<option value="Staff Handler #1">Handler #1</option>
-									<option value="Staff Handler #2">Handler #2</option>
-									<option value="Staff Handler #3">Handler #3</option>
-									<option value="Staff Handler #4">Handler #4</option>
-									<option value="Staff Handler #5">Handler #5</option>
-								</select>
-							</div>
-						</div>
-						<div class="g2">
-							<div class="fld">
-								<label class="flbl">Exam Score (%)</label
-								><input
-									id="inputExam"
-									class="fi"
-									type="number"
-									min="0"
-									max="100"
-									placeholder="e.g. 85"
-								/>
-							</div>
-							<div class="fld">
-								<label class="flbl">Literacy Check</label>
-								<select id="inputLiteracy" class="fsel">
-									<option value="Passed">Passed</option>
-									<option value="Failed">Failed</option>
-								</select>
-							</div>
-						</div>
-					</div>
-					<div class="mfot">
-						<button type="button" class="btn-g" onclick="closeEnrollmentModal()">
-							Cancel
-						</button>
-						<button type="submit" class="btn-p">Save Applicant</button>
-					</div>
-				</form>
-			</div>
-		</div>
+    <!-- PIPELINE -->
+    <div class="board" id="tabContent-pipeline">
+      <div class="scol">
+        <div class="shd"><div class="sl2"><div class="sdot" style="background:#94a3b8"></div><span class="stit">Sourced / Invited</span></div><span class="scnt" id="badge-stage-1">0</span></div>
+        <div class="scards" id="stage-col-1"></div>
+      </div>
+      <div class="scol">
+        <div class="shd"><div class="sl2"><div class="sdot" style="background:#3b82f6"></div><span class="stit">On-Site Screening</span></div><span class="scnt" id="badge-stage-2">0</span></div>
+        <div class="scards" id="stage-col-2"></div>
+      </div>
+      <div class="scol">
+        <div class="shd"><div class="sl2"><div class="sdot" style="background:#f59e0b;animation:pulse 2s infinite"></div><span class="stit">Medical &amp; Compliance</span></div><span class="scnt" id="badge-stage-3">0</span></div>
+        <div class="scards" id="stage-col-3" style="background:rgba(245,158,11,.015)"></div>
+      </div>
+      <div class="scol">
+        <div class="shd"><div class="sl2"><div class="sdot" style="background:#8b5cf6"></div><span class="stit">Orientation / Meeting</span></div><span class="scnt" id="badge-stage-4">0</span></div>
+        <div class="scards" id="stage-col-4"></div>
+      </div>
+      <div class="scol">
+        <div class="shd"><div class="sl2"><div class="sdot" style="background:#059669"></div><span class="stit">Deployed</span></div><span class="scnt" id="badge-stage-5">0</span></div>
+        <div class="scards" id="stage-col-5" style="background:rgba(5,150,105,.015)"></div>
+      </div>
+    </div>
 
-		<!-- COMPLIANCE DRAWER -->
-		<div id="complianceDrawer" class="drawer">
-			<div class="dhd">
-				<div>
-					<div class="dt" id="drawerCandidateName">Candidate Profile</div>
-					<div class="ds" id="drawerSourcingTag">Source &bull; Handler</div>
-				</div>
-				<button class="mclose" onclick="closeComplianceDrawer()">&times;</button>
-			</div>
-			<div class="dbody">
-				<div class="dsect">
-					<div class="dsect-t">
-						Pipeline Stage <span class="man-tag">Manual Update</span>
-					</div>
-					<div class="fld">
-						<label class="flbl">Current Stage</label>
-						<select id="pipelineSelectField" class="fsel">
-							<option value="1">Stage 1 &mdash; Sourced / Invited</option>
-							<option value="2">Stage 2 &mdash; On-Site Screening</option>
-							<option value="3">Stage 3 &mdash; Medical &amp; Compliance</option>
-							<option value="4">Stage 4 &mdash; Pool / Reserved</option>
-							<option value="5">Stage 5 &mdash; Deployed</option>
-						</select>
-					</div>
-				</div>
-				<div class="dsect">
-					<div class="dsect-t">Medical Status</div>
-					<div class="fld" style="margin-bottom: 10px">
-						<label class="flbl">Assessment Result</label>
-						<select id="medicalSelectField" class="fsel">
-							<option value="Pending">Pending Results</option>
-							<option value="Cleared">Cleared &mdash; Fit to Work</option>
-							<option value="Failed">Failed Fitness Check</option>
-						</select>
-					</div>
-					<div class="ib">
-						<strong>Partner Clinic:</strong> GenTri Medical Center (near JAE)<br /><strong
-							>Tests:</strong
-						>
-						Blood panel, urinalysis, visual, chest X-ray
-					</div>
-				</div>
-				<div class="dsect">
-					<div class="dsect-t">Required Documents</div>
-					<p style="font-size: 11px; color: var(--ink-soft); margin-bottom: 10px">
-						Check off documents received from the applicant:
-					</p>
-					<div class="chklist">
-						<label class="ci"
-							><input type="checkbox" id="checkNbi" /> NBI Clearance</label
-						>
-						<label class="ci"
-							><input type="checkbox" id="checkSss" /> SSS Member ID</label
-						>
-						<label class="ci"
-							><input type="checkbox" id="checkPhilhealth" /> PhilHealth MDR</label
-						>
-						<label class="ci"
-							><input type="checkbox" id="checkPagibig" /> Pag-IBIG Record</label
-						>
-						<label class="ci"
-							><input type="checkbox" id="checkBirth" /> PSA Birth Certificate</label
-						>
-					</div>
-				</div>
-			</div>
-			<div class="dfot">
-				<button
-					id="drawerDeleteBtn"
-					class="btn-d hidden"
-					onclick="deleteCandidateExecution()"
-				>
-					Remove Applicant
-				</button>
-				<div class="dfot-r">
-					<button class="btn-g" onclick="closeComplianceDrawer()">Cancel</button>
-					<button class="btn-f" onclick="saveComplianceDrawer()">Save Changes</button>
-				</div>
-			</div>
-		</div>
+    <!-- DATABASE VIEW -->
+    <div class="dbview" id="tabContent-database">
+      <div class="dbh">
+        <div><div class="dbt2">All Candidates</div><div class="dbs">Complete list of all applicants across every stage &mdash; JAE Philippines Inc.</div></div>
+      </div>
+      <div class="tw">
+        <table>
+          <thead><tr>
+            <th>Name</th><th>Age / Civil Status</th><th>Gender</th><th>Source</th><th>Exam Score</th><th>Medical</th><th>Stage 2 Docs</th><th>Stage</th>
+          </tr></thead>
+          <tbody id="databaseTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
 
-		<!-- AUDIT MODAL -->
-		<div id="auditModal" class="ov hidden">
-			<div class="mbox abox">
-				<div class="ahd">
-					<div>
-						<div class="at">Activity Log</div>
-						<div class="as">
-							All system actions and status changes recorded in real time
-						</div>
-					</div>
-					<button class="mclose" onclick="toggleAuditTrail()">&times;</button>
-				</div>
-				<div id="auditTerminalLogs" class="aterm">
-					<div style="color: #4b5563">
-						[2026-05-26 08:00:00] &mdash; System initialized &middot; PostgreSQL node
-						online
-					</div>
-					<div>
-						<span style="color: #60a5fa">[ADDED]</span> Recruitment_Staff registered
-						Mateo Ramos via Facebook.
-					</div>
-					<div>
-						<span style="color: #fbbf24">[STATUS]</span> Recruitment_Staff updated Arnel
-						Bautista medical &rarr; Pending.
-					</div>
-					<div style="color: #4b5563">[GATEWAY] Listening on http://192.168.1.100</div>
-				</div>
-				<div class="afot">
-					<button class="btn-dk" onclick="toggleAuditTrail()">Close</button>
-				</div>
-			</div>
-		</div>
+<!-- ENROLLMENT MODAL -->
+<div id="enrollmentModal" class="ov hidden">
+  <div class="mbox">
+    <div class="mhd">
+      <div><div class="mt">Add New Applicant</div><div class="ms">Initial intake &mdash; Stage 1: Sourced / Invited &middot; JAE Philippines Inc.</div></div>
+      <button class="mclose" onclick="closeEnrollmentModal()">&times;</button>
+    </div>
+    <form id="enrollmentForm" onsubmit="commitCandidateEnrollment(event)">
+      <div class="mbody">
+        <div id="duplicateWarning" class="dw hidden">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          <div><div class="wt">Duplicate Name Detected</div><div class="wb">An applicant with this name already exists. Verify before continuing.</div></div>
+        </div>
+        <div class="fld">
+          <label class="flbl">Full Name</label>
+          <input id="inputName" class="fi" type="text" required oninput="interceptDuplicateInput(this.value)" placeholder="e.g. Elena Santos"/>
+        </div>
+        <div class="g3">
+          <div class="fld">
+            <label class="flbl">Age</label>
+            <input id="inputAge" class="fi" type="number" min="18" max="65" placeholder="e.g. 25" required/>
+          </div>
+          <div class="fld">
+            <label class="flbl">Civil Status</label>
+            <select id="inputCivilStatus" class="fsel">
+              <option>Single</option><option>Married</option><option>Widowed</option><option>Separated</option>
+            </select>
+          </div>
+          <div class="fld">
+            <label class="flbl">Gender / Sex</label>
+            <select id="inputGender" class="fsel">
+              <option value="Male">Male</option><option value="Female">Female</option>
+            </select>
+          </div>
+        </div>
+        <div class="fld">
+          <label class="flbl">Source Channel</label>
+          <select id="inputSource" class="fsel">
+            <option value="Facebook">Facebook</option>
+            <option value="Walk-In">Walk-In</option>
+            <option value="Referral">Referral</option>
+            <option value="TikTok Live">TikTok Live</option>
+          </select>
+        </div>
+        <div class="fld">
+          <label class="flbl">Address / Barangay</label>
+          <input id="inputAddress" class="fi" type="text" placeholder="e.g. Brgy. Manggahan, General Trias"/>
+        </div>
+        <div class="fld">
+          <label class="flbl">Contact Number</label>
+          <input id="inputContact" class="fi" type="text" placeholder="e.g. 09XXXXXXXXX"/>
+        </div>
+      </div>
+      <div class="mfot">
+        <button type="button" class="btn-g" onclick="closeEnrollmentModal()">Cancel</button>
+        <button type="submit" class="btn-p">Save Applicant</button>
+      </div>
+    </form>
+  </div>
+</div>
 
-		<div id="tc"></div>
+<!-- COMPLIANCE DRAWER -->
+<div id="complianceDrawer" class="drawer">
+  <div class="dhd">
+    <div>
+      <div class="dt" id="drawerCandidateName">Candidate Profile</div>
+      <div class="ds" id="drawerSourcingTag">Source &bull; Stage</div>
+    </div>
+    <button class="mclose" onclick="closeComplianceDrawer()">&times;</button>
+  </div>
 
-		<script>
-			let currentRole = "Staff",
-				activeTab = "pipeline",
-				activeCandidateId = null;
-			let candidates = [
-				{
-					id: 1,
-					name: "Mateo Ramos",
-					source: "Facebook",
-					handler: "Staff Handler #3",
-					examScore: 78,
-					literacyPass: "Passed",
-					medStatus: "Pending",
-					docs: { nbi: true, sss: true, philhealth: false, pagibig: false, birth: false },
-					stage: 1,
-				},
-				{
-					id: 2,
-					name: "Elena Santos",
-					source: "Walk In",
-					handler: "Staff Handler #1",
-					examScore: 92,
-					literacyPass: "Passed",
-					medStatus: "Cleared",
-					docs: { nbi: true, sss: true, philhealth: true, pagibig: true, birth: true },
-					stage: 1,
-				},
-				{
-					id: 3,
-					name: "Juan Dela Cruz",
-					source: "Walk-In",
-					handler: "Staff Handler #2",
-					examScore: 88,
-					literacyPass: "Passed",
-					medStatus: "Cleared",
-					docs: { nbi: true, sss: true, philhealth: true, pagibig: true, birth: false },
-					stage: 2,
-				},
-				{
-					id: 4,
-					name: "Arnel Bautista",
-					source: "Facebook",
-					handler: "Staff Handler #3",
-					examScore: 65,
-					literacyPass: "Passed",
-					medStatus: "Pending",
-					docs: { nbi: true, sss: true, philhealth: true, pagibig: false, birth: false },
-					stage: 3,
-				},
-				{
-					id: 5,
-					name: "Reynaldo Cruz",
-					source: "Walk-In",
-					handler: "Staff Handler #4",
-					examScore: 40,
-					literacyPass: "Passed",
-					medStatus: "Failed",
-					docs: { nbi: true, sss: true, philhealth: true, pagibig: true, birth: true },
-					stage: 3,
-				},
-				{
-					id: 6,
-					name: "Maria Clara",
-					source: "Referral",
-					handler: "Staff Handler #5",
-					examScore: 81,
-					literacyPass: "Passed",
-					medStatus: "Cleared",
-					docs: { nbi: true, sss: true, philhealth: true, pagibig: true, birth: true },
-					stage: 4,
-				},
-				{
-					id: 7,
-					name: "Joseph Maliksi",
-					source: "Walk-In",
-					handler: "Staff Handler #2",
-					examScore: 95,
-					literacyPass: "Passed",
-					medStatus: "Cleared",
-					docs: { nbi: true, sss: true, philhealth: true, pagibig: true, birth: true },
-					stage: 5,
-				},
-			];
-			window.onload = function () {
-				renderActiveState();
-				logTransaction("SYSTEM", "Interface initialized.", "SYSTEM");
-			};
-			function dispatchToast(title, msg, type = "success") {
-				const c = document.getElementById("tc");
-				const t = document.createElement("div");
-				t.className =
-					"toast" + (type === "error" ? " err" : type === "warning" ? " warn" : "");
-				t.innerHTML = `<span class="ti">${type === "error" ? "&#x1F6AB;" : type === "warning" ? "&#x26A0;&#xFE0F;" : "&#x2713;"}</span><div><div class="tt">${title}</div><div class="tm">${msg}</div></div>`;
-				c.appendChild(t);
-				setTimeout(() => t.classList.add("show"), 30);
-				setTimeout(() => {
-					t.classList.remove("show");
-					setTimeout(() => t.remove(), 300);
-				}, 4200);
-			}
-			function logTransaction(actor, details, action = "MUTATION") {
-				const c = document.getElementById("auditTerminalLogs");
-				const d = new Date().toISOString().replace("T", " ").substring(0, 19);
-				const p = document.createElement("div");
-				const cols = {
-					MUTATION: "#60A5FA",
-					STATUS_CHANGE: "#FBBF24",
-					SECURITY_ALERT: "#F87171",
-					SYSTEM: "#6B7280",
-				};
-				p.innerHTML = `[${d}] &mdash; <span style="color:${cols[action] || "#60A5FA"}">[${action}]</span> ${actor}: ${details}`;
-				c.prepend(p);
-			}
-			function getSrc(s) {
-				if (s === "TikTok Live") return "st";
-				if (s === "Walk-In") return "sw2";
-				if (s === "Referral") return "sr";
-				return "sf2";
-			}
-			function getMed(s) {
-				if (s === "Pending") return `<span class="mb mp">Pending</span>`;
-				if (s === "Cleared") return `<span class="mb mc">Cleared</span>`;
-				return `<span class="mb mf">Failed</span>`;
-			}
-			function buildCard(c, stage) {
-				const ck = Object.values(c.docs).filter((v) => v).length;
-				const pct = (ck / 5) * 100;
-				const lk = c.medStatus === "Failed";
-				const el = document.createElement("div");
-				el.className = "card" + (lk ? " lk" : "");
-				el.onclick = () => openComplianceDrawer(c.id);
-				el.innerHTML = `
-    <div class="ct"><span class="cn${lk ? " s" : ""}">${c.name}</span><span class="sb ${getSrc(c.source)}">${c.source}</span></div>
-    ${stage === 2 ? `<div class="scores"><div class="chip">Exam <span>${c.examScore}%</span></div><div class="chip">Literacy <span style="color:${c.literacyPass === "Passed" ? "var(--teal)" : "var(--crimson)"}">${c.literacyPass}</span></div></div>` : ""}
-    <div class="dbw"><div class="dbl"><span>Documents</span><span>${ck}/5</span></div><div class="dbt"><div class="dbf" style="width:${pct}%"></div></div></div>
-    <div class="cf"><span class="ht">${c.handler}</span>${getMed(c.medStatus)}</div>`;
-				return el;
-			}
-			function renderActiveState() {
-				document.getElementById("kpiSourced").innerText = candidates.length;
-				document.getElementById("kpiPending").innerText = candidates.filter(
-					(c) => c.medStatus === "Pending"
-				).length;
-				document.getElementById("kpiCleared").innerText = candidates.filter(
-					(c) => c.stage === 5
-				).length;
-				for (let i = 1; i <= 5; i++) {
-					const col = document.getElementById(`stage-col-${i}`);
-					const badge = document.getElementById(`badge-stage-${i}`);
-					col.innerHTML = "";
-					const list = candidates.filter((c) => c.stage === i);
-					badge.innerText = list.length;
-					if (!list.length) {
-						col.innerHTML = `<div class="empty">No applicants here yet</div>`;
-						continue;
-					}
-					list.forEach((c) => col.appendChild(buildCard(c, i)));
-				}
-				const tb = document.getElementById("databaseTableBody");
-				tb.innerHTML = "";
-				candidates.forEach((c) => {
-					const ck = Object.values(c.docs).filter((v) => v).length;
-					const mc =
-						c.medStatus === "Cleared"
-							? "var(--teal)"
-							: c.medStatus === "Failed"
-								? "var(--crimson)"
-								: "var(--amber)";
-					const tr = document.createElement("tr");
-					tr.onclick = () => openComplianceDrawer(c.id);
-					tr.innerHTML = `<td>${c.name}</td><td>${c.source}</td><td>${c.handler}</td><td>${c.examScore}% &middot; ${c.literacyPass}</td><td style="font-weight:600;color:${mc}">${c.medStatus}</td><td>${ck}/5 documents</td><td><span style="background:#F0F2EE;border:1px solid #E4E8E3;padding:3px 9px;border-radius:5px;font-weight:700;font-size:11px">Stage ${c.stage}</span></td>`;
-					tb.appendChild(tr);
-				});
-			}
-			function switchTab(id) {
-				activeTab = id;
-				const pb = document.getElementById("tabContent-pipeline");
-				const db = document.getElementById("tabContent-database");
-				const np = document.getElementById("nav-pipeline");
-				const nd = document.getElementById("nav-database");
-				if (id === "pipeline") {
-					pb.classList.remove("hidden");
-					db.classList.remove("visible");
-					db.classList.add("hidden");
-					np.classList.add("active");
-					nd.classList.remove("active");
-				} else {
-					db.classList.remove("hidden");
-					db.classList.add("visible");
-					pb.classList.add("hidden");
-					nd.classList.add("active");
-					np.classList.remove("active");
-				}
-			}
-			function executeSearchFilter(term) {
-				const q = term.toLowerCase().trim();
-				const list = q
-					? candidates.filter(
-							(c) =>
-								c.name.toLowerCase().includes(q) ||
-								c.source.toLowerCase().includes(q) ||
-								c.handler.toLowerCase().includes(q)
-						)
-					: candidates;
-				for (let i = 1; i <= 5; i++) {
-					const col = document.getElementById(`stage-col-${i}`);
-					const badge = document.getElementById(`badge-stage-${i}`);
-					col.innerHTML = "";
-					const sl = list.filter((c) => c.stage === i);
-					badge.innerText = sl.length;
-					if (!sl.length) {
-						col.innerHTML = `<div class="empty">No matches found</div>`;
-						continue;
-					}
-					sl.forEach((c) => col.appendChild(buildCard(c, i)));
-				}
-			}
-			function openEnrollmentModal() {
-				document.getElementById("enrollmentModal").classList.remove("hidden");
-			}
-			function closeEnrollmentModal() {
-				document.getElementById("enrollmentModal").classList.add("hidden");
-				document.getElementById("duplicateWarning").classList.add("hidden");
-				document.getElementById("enrollmentForm").reset();
-			}
-			function interceptDuplicateInput(v) {
-				const f = candidates.some((c) => c.name.toLowerCase() === v.toLowerCase().trim());
-				document.getElementById("duplicateWarning").classList.toggle("hidden", !f);
-			}
-			function commitCandidateEnrollment(e) {
-				e.preventDefault();
-				const name = document.getElementById("inputName").value.trim();
-				const source = document.getElementById("inputSource").value;
-				const handler = document.getElementById("inputHandler").value;
-				const exam = parseInt(document.getElementById("inputExam").value) || 0;
-				const literacy = document.getElementById("inputLiteracy").value;
-				if (candidates.some((c) => c.name.toLowerCase() === name.toLowerCase())) {
-					dispatchToast(
-						"Duplicate Found",
-						"An applicant with this name already exists.",
-						"warning"
-					);
-					return;
-				}
-				const id = candidates.length ? Math.max(...candidates.map((c) => c.id)) + 1 : 1;
-				candidates.push({
-					id,
-					name,
-					source,
-					handler,
-					examScore: exam,
-					literacyPass: literacy,
-					medStatus: "Pending",
-					docs: {
-						nbi: false,
-						sss: false,
-						philhealth: false,
-						pagibig: false,
-						birth: false,
-					},
-					stage: 1,
-				});
-				renderActiveState();
-				logTransaction(
-					currentRole === "Supervisor" ? "Supervisor" : "Staff",
-					`Added ${name} (ID #${id}) via ${source}.`
-				);
-				dispatchToast("Applicant Added", `${name} has been enrolled successfully.`);
-				closeEnrollmentModal();
-			}
-			function openComplianceDrawer(id) {
-				activeCandidateId = id;
-				const c = candidates.find((x) => x.id === id);
-				if (!c) return;
-				document.getElementById("drawerCandidateName").innerText = c.name;
-				document.getElementById("drawerSourcingTag").innerText =
-					`${c.source} \u00B7 ${c.handler}`;
-				document.getElementById("pipelineSelectField").value = c.stage;
-				document.getElementById("medicalSelectField").value = c.medStatus;
-				document.getElementById("checkNbi").checked = c.docs.nbi;
-				document.getElementById("checkSss").checked = c.docs.sss;
-				document.getElementById("checkPhilhealth").checked = c.docs.philhealth;
-				document.getElementById("checkPagibig").checked = c.docs.pagibig;
-				document.getElementById("checkBirth").checked = c.docs.birth;
-				document.getElementById("complianceDrawer").classList.add("open");
-			}
-			function closeComplianceDrawer() {
-				document.getElementById("complianceDrawer").classList.remove("open");
-				activeCandidateId = null;
-			}
-			function saveComplianceDrawer() {
-				if (!activeCandidateId) return;
-				const c = candidates.find((x) => x.id === activeCandidateId);
-				if (!c) return;
-				const stage = parseInt(document.getElementById("pipelineSelectField").value);
-				const med = document.getElementById("medicalSelectField").value;
-				if (stage === 5 && med !== "Cleared") {
-					dispatchToast(
-						"Cannot Deploy",
-						"Applicant must be medically cleared before being marked as deployed.",
-						"error"
-					);
-					return;
-				}
-				c.stage = stage;
-				c.medStatus = med;
-				c.docs.nbi = document.getElementById("checkNbi").checked;
-				c.docs.sss = document.getElementById("checkSss").checked;
-				c.docs.philhealth = document.getElementById("checkPhilhealth").checked;
-				c.docs.pagibig = document.getElementById("checkPagibig").checked;
-				c.docs.birth = document.getElementById("checkBirth").checked;
-				renderActiveState();
-				logTransaction(
-					currentRole === "Supervisor" ? "Supervisor" : "Staff",
-					`Updated profile for ${c.name}.`,
-					"STATUS_CHANGE"
-				);
-				dispatchToast("Changes Saved", `${c.name}'s profile has been updated.`);
-				closeComplianceDrawer();
-			}
-			function deleteCandidateExecution() {
-				if (currentRole !== "Supervisor") {
-					dispatchToast(
-						"Access Denied",
-						"Only supervisors can remove applicant profiles.",
-						"error"
-					);
-					return;
-				}
-				if (!activeCandidateId) return;
-				const i = candidates.findIndex((c) => c.id === activeCandidateId);
-				if (i !== -1) {
-					const name = candidates[i].name;
-					candidates.splice(i, 1);
-					renderActiveState();
-					logTransaction("Supervisor", `Removed profile: ${name}.`, "SECURITY_ALERT");
-					dispatchToast(
-						"Applicant Removed",
-						`${name} has been deleted from the system.`,
-						"warning"
-					);
-					closeComplianceDrawer();
-				}
-			}
-			function generateReport() {
-				if (currentRole !== "Supervisor") return;
-				dispatchToast("Report Ready", "Sourcing report PDF has been generated.", "success");
-			}
-			function setRole(role) {
-				currentRole = role;
-				const sB = document.getElementById("roleStaffBtn");
-				const spB = document.getElementById("roleSupervisorBtn");
-				const dsp = document.getElementById("userDisplay");
-				const sub = document.getElementById("roleSubtext");
-				const dBtn = document.getElementById("drawerDeleteBtn");
-				const nA = document.getElementById("nav-analytics");
-				const nL = document.getElementById("nav-logs");
-				if (role === "Supervisor") {
-					sB.classList.remove("active");
-					spB.classList.add("active");
-					dsp.innerText = "Recruitment Supervisor";
-					sub.innerText = "Recruitment Supervisor";
-					nA.classList.remove("locked");
-					nA.classList.add("unlocked");
-					nL.classList.remove("locked");
-					nL.classList.add("unlocked");
-					dBtn.classList.remove("hidden");
-					dispatchToast(
-						"Supervisor Access",
-						"Full administrative access granted.",
-						"success"
-					);
-				} else {
-					spB.classList.remove("active");
-					sB.classList.add("active");
-					dsp.innerText = "Recruiter View";
-					sub.innerText = "Staff Account";
-					nA.classList.add("locked");
-					nA.classList.remove("unlocked");
-					nL.classList.add("locked");
-					nL.classList.remove("unlocked");
-					dBtn.classList.add("hidden");
-					document.getElementById("auditModal").classList.add("hidden");
-					dispatchToast("Staff Mode", "Switched to standard staff view.", "warning");
-				}
-			}
-			function toggleAuditTrail() {
-				if (currentRole !== "Supervisor") {
-					dispatchToast(
-						"Access Denied",
-						"Only supervisors can view the activity log.",
-						"error"
-					);
-					return;
-				}
-				document.getElementById("auditModal").classList.toggle("hidden");
-			}
-		</script>
-	</body>
+  <!-- SCROLLABLE BODY — the key fix -->
+  <div class="dbody">
+    <div class="dsect">
+      <div class="dsect-t">Pipeline Stage <span class="man-tag">Manual Update</span></div>
+      <div class="fld">
+        <label class="flbl">Move to Stage</label>
+        <select id="pipelineSelectField" class="fsel" onchange="onDrawerStageChange(this.value)">
+          <option value="1">Stage 1 &mdash; Sourced / Invited</option>
+          <option value="2">Stage 2 &mdash; On-Site Screening</option>
+          <option value="3">Stage 3 &mdash; Medical &amp; Compliance</option>
+          <option value="4">Stage 4 &mdash; Orientation / Meeting</option>
+          <option value="5">Stage 5 &mdash; Deployed</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="drawer-stage-panels" id="drawerStagePanels">
+
+      <!-- STAGE 1 -->
+      <div id="panel-stage-1">
+        <div class="dsect">
+          <div class="dsect-t">Applicant Information</div>
+          <div class="g2" style="margin-bottom:10px">
+            <div class="fld"><label class="flbl">Age</label><input id="dAge" class="fi" type="number" min="18" max="65" placeholder="—"/></div>
+            <div class="fld"><label class="flbl">Civil Status</label><select id="dCivilStatus" class="fsel"><option>Single</option><option>Married</option><option>Widowed</option><option>Separated</option></select></div>
+          </div>
+          <div class="g2" style="margin-bottom:10px">
+            <div class="fld"><label class="flbl">Gender / Sex</label><select id="dGender" class="fsel"><option>Male</option><option>Female</option></select></div>
+            <div class="fld"><label class="flbl">Contact No.</label><input id="dContact" class="fi" type="text" placeholder="09XXXXXXXXX"/></div>
+          </div>
+          <div class="fld"><label class="flbl">Address / Barangay</label><input id="dAddress" class="fi" type="text" placeholder="Brgy., City"/></div>
+        </div>
+      </div>
+
+      <!-- STAGE 2 -->
+      <div id="panel-stage-2">
+        <div class="dsect">
+          <div class="dsect-t">Personal &amp; Employment Status</div>
+          <div class="g2" style="margin-bottom:10px">
+            <div class="fld"><label class="flbl">Employment Status</label><select id="dEmpStatus" class="fsel"><option value="">-- Select --</option><option>Fresh Graduate</option><option>Previously Employed</option><option>Currently Employed</option><option>Self-Employed</option></select></div>
+            <div class="fld"><label class="flbl">Highest Education</label><select id="dEducation" class="fsel"><option value="">-- Select --</option><option>High School Graduate</option><option>College Level</option><option>College Graduate</option><option>Vocational / TESDA</option><option>Post-Graduate</option></select></div>
+          </div>
+          <div class="fld"><label class="flbl">Last Employer / Work Experience</label><input id="dLastEmployer" class="fi" type="text" placeholder="Company name or N/A"/></div>
+        </div>
+
+        <div class="dsect">
+          <div class="dsect-t">Literacy &amp; Examination</div>
+          <div class="g2" style="margin-bottom:8px">
+            <div class="fld"><label class="flbl">Exam Score (%)</label><input id="dExamScore" class="fi" type="number" min="0" max="100" placeholder="e.g. 85" oninput="updateScoreTag()"/></div>
+            <div class="fld"><label class="flbl">Literacy Check</label><select id="dLiteracy" class="fsel" onchange="updateScoreTag()"><option value="Passed">Passed</option><option value="Failed">Failed</option></select></div>
+          </div>
+          <div id="scoreTagArea" style="margin-bottom:8px"></div>
+          <div class="ib" style="font-size:10.5px"><strong>Passing threshold:</strong> Exam &ge;70% AND Literacy: Passed &rarr; auto-tags card.</div>
+        </div>
+
+        <!-- PHYSICAL ASSESSMENT (checkboxes only) -->
+        <div class="dsect">
+          <div class="dsect-t">Physical Assessment</div>
+          <p class="sect-note" style="margin-bottom:8px">Check applicable observations during interview:</p>
+          <div class="remarks-grid">
+            <label class="remark-check warn-flag"><input type="checkbox" id="dHasTattoo"/> Has Tattoo(s)</label>
+            <label class="remark-check warn-flag"><input type="checkbox" id="dHasPiercing"/> Has Visible Piercing(s)</label>
+            <label class="remark-check warn-flag"><input type="checkbox" id="dHasScar"/> Visible Scars / Marks</label>
+            <label class="remark-check"><input type="checkbox" id="dWearingGlasses"/> Wearing Eyeglasses</label>
+            <label class="remark-check"><input type="checkbox" id="dGoodGrooming"/> Good Grooming / Neat</label>
+            <label class="remark-check warn-flag"><input type="checkbox" id="dHasDisability"/> Declared Disability</label>
+          </div>
+          <div class="g2" style="margin-top:10px">
+            <div class="fld">
+              <label class="flbl">Height (cm)</label>
+              <input id="dHeight" class="fi" type="number" min="100" max="220" placeholder="e.g. 165"/>
+            </div>
+            <div class="fld">
+              <label class="flbl">Weight (kg)</label>
+              <input id="dWeight" class="fi" type="number" min="30" max="200" placeholder="e.g. 58"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- INTERVIEW REMARKS (text only, fully separate) -->
+        <div class="dsect">
+          <div class="dsect-t">Interview Remarks</div>
+          <div class="fld">
+            <label class="flbl">Staff Notes / Observations</label>
+            <textarea id="dInterviewRemarks" class="fta" placeholder="e.g. Good attitude, communicates well. Tattoo on left forearm — covered by uniform. No red flags observed…" style="min-height:90px"></textarea>
+          </div>
+        </div>
+
+        <div class="dsect">
+          <div class="dsect-t">Required Documents</div>
+          <p style="font-size:11px;color:var(--ink-soft);margin-bottom:10px">Check documents received from applicant:</p>
+          <div class="chklist">
+            <label class="ci"><input type="checkbox" id="dDocDiploma"/> Diploma / Transcript of Records</label>
+            <label class="ci"><input type="checkbox" id="dDocNbi"/> NBI Clearance</label>
+            <label class="ci"><input type="checkbox" id="dDocPolice"/> Police Clearance</label>
+            <label class="ci"><input type="checkbox" id="dDocSss"/> SSS Member ID / E1 Form</label>
+            <label class="ci"><input type="checkbox" id="dDocPagibig"/> Pag-IBIG Member ID</label>
+            <label class="ci"><input type="checkbox" id="dDocTin"/> TIN / BIR Form 1902</label>
+            <label class="ci"><input type="checkbox" id="dDocOsa"/> OSA Clearance</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- STAGE 3 -->
+      <div id="panel-stage-3">
+        <div class="dsect">
+          <div class="dsect-t">Medical Assessment</div>
+          <div class="fld" style="margin-bottom:10px">
+            <label class="flbl">Medical Result</label>
+            <select id="medicalSelectField" class="fsel">
+              <option value="Pending">Pending Results</option>
+              <option value="Cleared">Cleared &mdash; Fit to Work</option>
+              <option value="Failed">Failed Fitness Check</option>
+            </select>
+          </div>
+          <div class="fld" style="margin-bottom:10px">
+            <label class="flbl">Medical Date / Schedule</label>
+            <input id="dMedDate" class="fi" type="date"/>
+          </div>
+          <div class="fld">
+            <label class="flbl">Medical Notes / Findings</label>
+            <textarea id="dMedNotes" class="fta" placeholder="Enter findings, recommendations, or clinic remarks…"></textarea>
+          </div>
+        </div>
+        <div class="dsect">
+          <div class="dsect-t">Compliance Documents</div>
+          <div class="ib" style="margin-bottom:10px"><strong>Partner Clinic:</strong> GenTri Medical Center (near JAE)<br/><strong>Tests:</strong> Blood panel, urinalysis, visual acuity, chest X-ray, physical exam</div>
+          <div class="chklist">
+            <label class="ci"><input type="checkbox" id="dDocPhilhealth"/> PhilHealth MDR</label>
+            <label class="ci"><input type="checkbox" id="dDocMedResult"/> Medical Results Copy</label>
+            <label class="ci"><input type="checkbox" id="dDocXray"/> Chest X-Ray Film</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- STAGE 4 — Orientation: NO policy checklist, only schedules -->
+      <div id="panel-stage-4">
+        <div class="dsect">
+          <div class="dsect-t">Orientation Schedule</div>
+          <div class="orient-info" style="margin-bottom:12px">
+            <strong>JAE Philippines Inc.</strong> — All orientation sessions are conducted at the main office. Company policies are covered automatically during orientation. Only schedule and attendance need to be tracked here.
+          </div>
+          <div class="g2" style="margin-bottom:10px">
+            <div class="fld"><label class="flbl">Orientation Date</label><input id="dOrientDate" class="fi" type="date"/></div>
+            <div class="fld"><label class="flbl">Time</label><input id="dOrientTime" class="fi" type="time"/></div>
+          </div>
+          <div class="fld" style="margin-bottom:10px">
+            <label class="flbl">Venue / Location</label>
+            <input id="dOrientVenue" class="fi" type="text" placeholder="e.g. Main Office — Conference Room A"/>
+          </div>
+          <div class="fld">
+            <label class="flbl">Assigned Client / Deployment Site (JAE Philippines Inc.)</label>
+            <input id="dClientSite" class="fi" type="text" placeholder="e.g. JAE Philippines Inc. — Production Area"/>
+          </div>
+        </div>
+        <div class="dsect">
+          <div class="dsect-t">Attendance Status</div>
+          <div class="fld">
+            <label class="flbl">Attendance</label>
+            <select id="dOrientAttendance" class="fsel">
+              <option value="Scheduled">Scheduled</option>
+              <option value="Attended">Attended — Completed</option>
+              <option value="No Show">No Show / Absent</option>
+              <option value="Rescheduled">Rescheduled</option>
+            </select>
+          </div>
+        </div>
+        <div class="dsect">
+          <div class="dsect-t">Orientation Remarks</div>
+          <div class="fld">
+            <label class="flbl">Staff Notes</label>
+            <textarea id="dOrientRemarks" class="fta" placeholder="Applicant concerns, follow-up actions, or special instructions…"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- STAGE 5 -->
+      <div id="panel-stage-5">
+        <div class="dsect">
+          <div class="dsect-t">Deployment Details</div>
+          <div class="fld" style="margin-bottom:10px">
+            <label class="flbl">Deployment Date</label>
+            <input id="dDeployDate" class="fi" type="date"/>
+          </div>
+          <div class="fld" style="margin-bottom:10px">
+            <label class="flbl">Client / Company</label>
+            <input id="dDeployClient" class="fi" type="text" value="JAE Philippines Inc." placeholder="JAE Philippines Inc."/>
+          </div>
+          <div class="fld" style="margin-bottom:10px">
+            <label class="flbl">Position / Role</label>
+            <input id="dDeployRole" class="fi" type="text" placeholder="e.g. Production Staff, Utility"/>
+          </div>
+          <div class="fld">
+            <label class="flbl">Deployment Notes</label>
+            <textarea id="dDeployNotes" class="fta" placeholder="Special instructions or deployment remarks…"></textarea>
+          </div>
+        </div>
+        <div class="dsect">
+          <div class="dsect-t">Deployment Requirements</div>
+          <div class="chklist">
+            <label class="ci"><input type="checkbox" id="dDepContract"/> Employment Contract Signed</label>
+            <label class="ci"><input type="checkbox" id="dDepId"/> Company ID Issued</label>
+            <label class="ci"><input type="checkbox" id="dDepUniform"/> Uniform Received</label>
+            <label class="ci"><input type="checkbox" id="dDepBriefed"/> Supervisor Briefing Done</label>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end drawer-stage-panels -->
+  </div><!-- end dbody -->
+
+  <div class="dfot">
+    <button id="drawerDeleteBtn" class="btn-d hidden" onclick="deleteCandidateExecution()">Remove Applicant</button>
+    <div class="dfot-r">
+      <button class="btn-g" onclick="closeComplianceDrawer()">Cancel</button>
+      <button class="btn-f" onclick="saveComplianceDrawer()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- AUDIT MODAL -->
+<div id="auditModal" class="ov hidden">
+  <div class="mbox abox">
+    <div class="ahd">
+      <div><div class="at">Activity Log</div><div class="as">All system actions and status changes recorded in real time</div></div>
+      <button class="mclose" onclick="toggleAuditTrail()">&times;</button>
+    </div>
+    <div id="auditTerminalLogs" class="aterm">
+      <div style="color:#4b5563">[2026-05-26 08:00:00] &mdash; System initialized &middot; FAMSync v2.2 online &middot; JAE Philippines Inc.</div>
+      <div><span style="color:#60a5fa">[ADDED]</span> Recruitment_Staff registered Mateo Ramos via Facebook.</div>
+      <div style="color:#4b5563">[GATEWAY] Listening on http://192.168.1.100</div>
+    </div>
+    <div class="afot"><button class="btn-dk" onclick="toggleAuditTrail()">Close</button></div>
+  </div>
+</div>
+
+<div id="tc"></div>
+
+<script>
+var currentRole='Staff', activeTab='pipeline', activeCandidateId=null;
+var candidates=[
+  {id:1,name:"Mateo Ramos",age:24,civilStatus:"Single",gender:"Male",contact:"09171234567",address:"Brgy. Manggahan",source:"Facebook",
+   s2:{empStatus:"Previously Employed",education:"College Level",lastEmployer:"SM City Dasmarinas",examScore:78,literacy:"Passed",
+       hasTattoo:false,hasPiercing:false,hasScar:false,wearingGlasses:false,goodGrooming:true,hasDisability:false,height:"170",weight:"65",
+       interviewRemarks:"Good communication, punctual.",
+       docs:{diploma:true,nbi:true,police:false,sss:true,pagibig:false,tin:false,osa:false}},
+   s3:{medStatus:"Pending",medDate:"",medNotes:"",docs:{philhealth:false,medResult:false,xray:false}},
+   s4:{orientDate:"",orientTime:"",orientVenue:"",clientSite:"JAE Philippines Inc.",attendance:"Scheduled",orientRemarks:""},
+   s5:{deployDate:"",deployClient:"JAE Philippines Inc.",deployRole:"",deployNotes:"",reqs:{contract:false,id:false,uniform:false,briefed:false}},stage:1},
+  {id:2,name:"Elena Santos",age:27,civilStatus:"Single",gender:"Female",contact:"09181234567",address:"Brgy. Pasong Camachile",source:"Walk-In",
+   s2:{empStatus:"Fresh Graduate",education:"College Graduate",lastEmployer:"N/A",examScore:92,literacy:"Passed",
+       hasTattoo:false,hasPiercing:true,hasScar:false,wearingGlasses:false,goodGrooming:true,hasDisability:false,height:"160",weight:"52",
+       interviewRemarks:"Excellent written test. Very eager. Small ear piercing noted.",
+       docs:{diploma:true,nbi:true,police:true,sss:true,pagibig:true,tin:true,osa:true}},
+   s3:{medStatus:"Cleared",medDate:"2026-05-10",medNotes:"All tests normal.",docs:{philhealth:true,medResult:true,xray:true}},
+   s4:{orientDate:"2026-05-15",orientTime:"09:00",orientVenue:"Main Office - Conference Room A",clientSite:"JAE Philippines Inc. - Production",attendance:"Attended",orientRemarks:"No issues."},
+   s5:{deployDate:"2026-05-20",deployClient:"JAE Philippines Inc.",deployRole:"Production Staff",deployNotes:"Assigned to assembly line A.",reqs:{contract:true,id:true,uniform:true,briefed:true}},stage:5},
+  {id:3,name:"Juan Dela Cruz",age:31,civilStatus:"Married",gender:"Male",contact:"09271234567",address:"Brgy. Buenavista",source:"Walk-In",
+   s2:{empStatus:"Previously Employed",education:"College Graduate",lastEmployer:"Jollibee Foods Corp",examScore:88,literacy:"Passed",
+       hasTattoo:true,hasPiercing:false,hasScar:false,wearingGlasses:false,goodGrooming:true,hasDisability:false,height:"172",weight:"70",
+       interviewRemarks:"Calm, experienced. Tattoo on left forearm — covered by uniform.",
+       docs:{diploma:true,nbi:true,police:true,sss:true,pagibig:true,tin:true,osa:false}},
+   s3:{medStatus:"Cleared",medDate:"2026-05-08",medNotes:"Slight high BP, cleared.",docs:{philhealth:true,medResult:true,xray:false}},
+   s4:{orientDate:"2026-05-18",orientTime:"10:00",orientVenue:"Main Office",clientSite:"JAE Philippines Inc.",attendance:"Scheduled",orientRemarks:""},
+   s5:{deployDate:"",deployClient:"JAE Philippines Inc.",deployRole:"",deployNotes:"",reqs:{contract:false,id:false,uniform:false,briefed:false}},stage:4},
+  {id:4,name:"Arnel Bautista",age:22,civilStatus:"Single",gender:"Male",contact:"09351234567",address:"Brgy. Santiago",source:"Facebook",
+   s2:{empStatus:"Fresh Graduate",education:"High School Graduate",lastEmployer:"N/A",examScore:65,literacy:"Passed",
+       hasTattoo:false,hasPiercing:false,hasScar:false,wearingGlasses:true,goodGrooming:true,hasDisability:false,height:"168",weight:"60",
+       interviewRemarks:"Needs improvement on writing.",
+       docs:{diploma:false,nbi:true,police:true,sss:true,pagibig:true,tin:false,osa:false}},
+   s3:{medStatus:"Pending",medDate:"2026-05-25",medNotes:"",docs:{philhealth:true,medResult:false,xray:false}},
+   s4:{orientDate:"",orientTime:"",orientVenue:"",clientSite:"JAE Philippines Inc.",attendance:"Scheduled",orientRemarks:""},
+   s5:{deployDate:"",deployClient:"JAE Philippines Inc.",deployRole:"",deployNotes:"",reqs:{contract:false,id:false,uniform:false,briefed:false}},stage:3},
+  {id:5,name:"Reynaldo Cruz",age:35,civilStatus:"Married",gender:"Male",contact:"09451234567",address:"Brgy. Navarro",source:"Walk-In",
+   s2:{empStatus:"Previously Employed",education:"College Level",lastEmployer:"Globe Telecom",examScore:40,literacy:"Failed",
+       hasTattoo:true,hasPiercing:false,hasScar:true,wearingGlasses:false,goodGrooming:false,hasDisability:false,height:"174",weight:"82",
+       interviewRemarks:"Below average. Recommend re-exam. Tattoo on neck area.",
+       docs:{diploma:false,nbi:true,police:true,sss:true,pagibig:true,tin:true,osa:false}},
+   s3:{medStatus:"Failed",medDate:"2026-05-12",medNotes:"Hypertension. Failed fitness requirements.",docs:{philhealth:true,medResult:true,xray:true}},
+   s4:{orientDate:"",orientTime:"",orientVenue:"",clientSite:"JAE Philippines Inc.",attendance:"Scheduled",orientRemarks:""},
+   s5:{deployDate:"",deployClient:"JAE Philippines Inc.",deployRole:"",deployNotes:"",reqs:{contract:false,id:false,uniform:false,briefed:false}},stage:3},
+  {id:6,name:"Maria Clara",age:29,civilStatus:"Single",gender:"Female",contact:"09551234567",address:"Brgy. Tejero",source:"Referral",
+   s2:{empStatus:"Previously Employed",education:"College Graduate",lastEmployer:"BDO Unibank",examScore:81,literacy:"Passed",
+       hasTattoo:false,hasPiercing:false,hasScar:false,wearingGlasses:false,goodGrooming:true,hasDisability:false,height:"158",weight:"50",
+       interviewRemarks:"Professional demeanor. Great fit.",
+       docs:{diploma:true,nbi:true,police:true,sss:true,pagibig:true,tin:true,osa:true}},
+   s3:{medStatus:"Cleared",medDate:"2026-05-14",medNotes:"All clear.",docs:{philhealth:true,medResult:true,xray:true}},
+   s4:{orientDate:"2026-05-22",orientTime:"08:00",orientVenue:"Conference Room B",clientSite:"JAE Philippines Inc. - Admin",attendance:"Attended",orientRemarks:"Confirmed deployment schedule."},
+   s5:{deployDate:"",deployClient:"JAE Philippines Inc.",deployRole:"",deployNotes:"",reqs:{contract:false,id:false,uniform:false,briefed:false}},stage:4},
+  {id:7,name:"Joseph Maliksi",age:26,civilStatus:"Single",gender:"Male",contact:"09651234567",address:"Brgy. Pinagtipunan",source:"Walk-In",
+   s2:{empStatus:"Previously Employed",education:"College Graduate",lastEmployer:"Puregold",examScore:95,literacy:"Passed",
+       hasTattoo:false,hasPiercing:false,hasScar:false,wearingGlasses:false,goodGrooming:true,hasDisability:false,height:"175",weight:"72",
+       interviewRemarks:"Top scorer. Highly recommended.",
+       docs:{diploma:true,nbi:true,police:true,sss:true,pagibig:true,tin:true,osa:true}},
+   s3:{medStatus:"Cleared",medDate:"2026-05-05",medNotes:"Perfect health.",docs:{philhealth:true,medResult:true,xray:true}},
+   s4:{orientDate:"2026-05-10",orientTime:"09:00",orientVenue:"Main Office",clientSite:"JAE Philippines Inc. - Warehouse",attendance:"Attended",orientRemarks:"Ready for deployment."},
+   s5:{deployDate:"2026-05-15",deployClient:"JAE Philippines Inc.",deployRole:"Utility Staff",deployNotes:"Assigned to warehouse area.",reqs:{contract:true,id:true,uniform:true,briefed:true}},stage:5}
+];
+
+window.onload=function(){renderActiveState();logTransaction("SYSTEM","Interface initialized. FAMSync v2.2 online — JAE Philippines Inc.","SYSTEM");};
+
+function dispatchToast(title,msg,type){
+  if(!type)type="success";
+  var c=document.getElementById("tc"),t=document.createElement("div");
+  t.className="toast"+(type==="error"?" err":type==="warning"?" warn":"");
+  t.innerHTML='<span class="ti">'+(type==="error"?"&#x1F6AB;":type==="warning"?"&#x26A0;&#xFE0F;":"&#x2713;")+'</span><div><div class="tt">'+title+'</div><div class="tm">'+msg+"</div></div>";
+  c.appendChild(t);
+  setTimeout(function(){t.classList.add("show");},30);
+  setTimeout(function(){t.classList.remove("show");setTimeout(function(){t.remove();},300);},4200);
+}
+
+function logTransaction(actor,details,action){
+  if(!action)action="MUTATION";
+  var c=document.getElementById("auditTerminalLogs"),d=new Date().toISOString().replace("T"," ").substring(0,19),p=document.createElement("div");
+  var cols={MUTATION:"#60A5FA",STATUS_CHANGE:"#FBBF24",SECURITY_ALERT:"#F87171",SYSTEM:"#6B7280"};
+  p.innerHTML="["+d+'] &mdash; <span style="color:'+(cols[action]||"#60A5FA")+'">['+action+"]</span> "+actor+": "+details;
+  c.prepend(p);
+}
+
+function getSrcClass(s){if(s==="TikTok Live")return"st";if(s==="Walk-In")return"sw2";if(s==="Referral")return"sr";return"sf2";}
+function getMedBadge(s){if(s==="Pending")return'<span class="mb mp">Pending</span>';if(s==="Cleared")return'<span class="mb mc">Cleared</span>';return'<span class="mb mf">Failed</span>';}
+function isScreeningFailed(c){return c.s2.examScore<70||c.s2.literacy==="Failed";}
+
+function buildCard(c,stage){
+  var lk=c.s3.medStatus==="Failed";
+  var el=document.createElement("div");
+  el.className="card"+(lk?" lk":"");
+  el.onclick=(function(id){return function(){openComplianceDrawer(id);};})(c.id);
+  var tattooFlag=c.s2.hasTattoo?'<span style="font-size:9px;background:#fdf1f1;color:var(--crimson);border:1px solid rgba(140,32,32,.2);padding:2px 5px;border-radius:3px;font-weight:700;">TATTOO</span>':'';
+  var inner='<div class="ct"><div><div class="cn'+(lk?" s":"")+'">'+c.name+'</div><div class="cn-sub">'+c.age+' yrs &middot; '+c.civilStatus+' &middot; '+c.gender+'</div></div><span class="sb '+getSrcClass(c.source)+'">'+c.source+'</span></div>';
+  if(tattooFlag)inner+='<div style="display:flex;gap:4px;flex-wrap:wrap;">'+tattooFlag+(c.s2.hasPiercing?'<span style="font-size:9px;background:#fdf1f1;color:var(--crimson);border:1px solid rgba(140,32,32,.2);padding:2px 5px;border-radius:3px;font-weight:700;">PIERCING</span>':'')+'</div>';
+  if(stage===2){
+    var sf=isScreeningFailed(c);
+    var stag=sf?'<span class="score-tag score-fail">Below Threshold</span>':'<span class="score-tag score-pass">Passed</span>';
+    inner+='<div class="scores"><div class="chip">Exam <span class="'+(c.s2.examScore<70?"fail":"pass")+'">'+c.s2.examScore+'%</span></div><div class="chip">Literacy <span class="'+(c.s2.literacy==="Passed"?"pass":"fail")+'">'+c.s2.literacy+'</span></div></div><div>'+stag+'</div>';
+    var s2c=Object.values(c.s2.docs).filter(function(v){return v;}).length;
+    inner+='<div class="dbw"><div class="dbl"><span>Documents</span><span>'+s2c+'/7</span></div><div class="dbt"><div class="dbf" style="width:'+(s2c/7*100)+'%"></div></div></div>';
+  } else if(stage===3){
+    var s3c=Object.values(c.s3.docs).filter(function(v){return v;}).length;
+    inner+='<div class="dbw"><div class="dbl"><span>Med Docs</span><span>'+s3c+'/3</span></div><div class="dbt"><div class="dbf" style="width:'+(s3c/3*100)+'%"></div></div></div>';
+  } else if(stage===4){
+    inner+='<div class="chip">Orientation: <span>'+c.s4.attendance+'</span></div>';
+    if(c.s4.orientDate)inner+='<div style="font-size:10px;color:var(--ink-soft)">'+c.s4.orientDate+(c.s4.orientTime?' &middot; '+c.s4.orientTime:'')+'</div>';
+  } else if(stage===5){
+    inner+='<div class="chip">Site: <span>'+(c.s5.deployClient||'JAE Philippines Inc.')+'</span></div>';
+    if(c.s5.deployDate)inner+='<div style="font-size:10px;color:var(--ink-soft)">Deployed: '+c.s5.deployDate+'</div>';
+  }
+  inner+='<div class="cf">'+getMedBadge(c.s3.medStatus)+'</div>';
+  el.innerHTML=inner;
+  return el;
+}
+
+function getFilteredCandidates(){
+  var q=(document.getElementById("globalSearchBar").value||"").toLowerCase().trim();
+  var fStage=document.getElementById("filterStage").value;
+  var fSource=document.getElementById("filterSource").value;
+  var fGender=document.getElementById("filterGender").value;
+  var fMedical=document.getElementById("filterMedical").value;
+  return candidates.filter(function(c){
+    if(q&&c.name.toLowerCase().indexOf(q)<0&&c.source.toLowerCase().indexOf(q)<0)return false;
+    if(fStage&&c.stage!==parseInt(fStage))return false;
+    if(fSource&&c.source!==fSource)return false;
+    if(fGender&&c.gender!==fGender)return false;
+    if(fMedical&&c.s3.medStatus!==fMedical)return false;
+    return true;
+  });
+}
+
+function applyAllFilters(){
+  var list=getFilteredCandidates();
+  for(var i=1;i<=5;i++){
+    var col=document.getElementById("stage-col-"+i),badge=document.getElementById("badge-stage-"+i);
+    col.innerHTML="";
+    var sl=list.filter(function(c){return c.stage===i;});
+    badge.innerText=sl.length;
+    if(!sl.length){col.innerHTML='<div class="empty">No matches found</div>';continue;}
+    sl.forEach(function(c){col.appendChild(buildCard(c,c.stage));});
+  }
+  renderDatabaseTable(list);
+}
+
+function clearAllFilters(){
+  document.getElementById("globalSearchBar").value="";
+  document.getElementById("filterStage").value="";
+  document.getElementById("filterSource").value="";
+  document.getElementById("filterGender").value="";
+  document.getElementById("filterMedical").value="";
+  renderActiveState();
+}
+
+function renderActiveState(){
+  document.getElementById("kpiSourced").innerText=candidates.length;
+  document.getElementById("kpiPending").innerText=candidates.filter(function(c){return c.s3.medStatus==="Pending";}).length;
+  document.getElementById("kpiCleared").innerText=candidates.filter(function(c){return c.stage===5;}).length;
+  for(var i=1;i<=5;i++){
+    var col=document.getElementById("stage-col-"+i),badge=document.getElementById("badge-stage-"+i);
+    col.innerHTML="";
+    var list=candidates.filter(function(c){return c.stage===i;});
+    badge.innerText=list.length;
+    if(!list.length){col.innerHTML='<div class="empty">No applicants here yet</div>';continue;}
+    list.forEach(function(c){col.appendChild(buildCard(c,c.stage));});
+  }
+  renderDatabaseTable(candidates);
+}
+
+function renderDatabaseTable(list){
+  var tb=document.getElementById("databaseTableBody");
+  tb.innerHTML="";
+  (list||candidates).forEach(function(c){
+    var mc=c.s3.medStatus==="Cleared"?"var(--teal)":c.s3.medStatus==="Failed"?"var(--crimson)":"var(--amber)";
+    var s2c=Object.values(c.s2.docs).filter(function(v){return v;}).length;
+    var tr=document.createElement("tr");
+    tr.onclick=(function(id){return function(){openComplianceDrawer(id);};})(c.id);
+    var flags=(c.s2.hasTattoo?'<span style="font-size:9px;color:var(--crimson);font-weight:700;margin-left:4px">TATTOO</span>':'')+(c.s2.hasPiercing?'<span style="font-size:9px;color:var(--crimson);font-weight:700;margin-left:4px">PIERCING</span>':'');
+    tr.innerHTML='<td>'+c.name+flags+'</td><td>'+c.age+' yrs &middot; '+c.civilStatus+'</td><td>'+c.gender+'</td><td>'+c.source+'</td><td>'+c.s2.examScore+'% &middot; '+c.s2.literacy+'</td><td style="font-weight:600;color:'+mc+'">'+c.s3.medStatus+'</td><td>'+s2c+'/7 docs</td><td><span style="background:#F0F2EE;border:1px solid #E4E8E3;padding:3px 9px;border-radius:5px;font-weight:700;font-size:11px">Stage '+c.stage+'</span></td>';
+    tb.appendChild(tr);
+  });
+}
+
+function switchTab(id){
+  activeTab=id;
+  var pb=document.getElementById("tabContent-pipeline"),db=document.getElementById("tabContent-database");
+  var np=document.getElementById("nav-pipeline"),nd=document.getElementById("nav-database");
+  if(id==="pipeline"){
+    pb.classList.remove("hidden");db.classList.remove("visible");db.classList.add("hidden");
+    np.classList.add("active");nd.classList.remove("active");
+  }else{
+    db.classList.remove("hidden");db.classList.add("visible");pb.classList.add("hidden");
+    nd.classList.add("active");np.classList.remove("active");
+  }
+}
+
+function openEnrollmentModal(){document.getElementById("enrollmentModal").classList.remove("hidden");}
+function closeEnrollmentModal(){document.getElementById("enrollmentModal").classList.add("hidden");document.getElementById("duplicateWarning").classList.add("hidden");document.getElementById("enrollmentForm").reset();}
+function interceptDuplicateInput(v){var f=candidates.some(function(c){return c.name.toLowerCase()===v.toLowerCase().trim();});document.getElementById("duplicateWarning").classList.toggle("hidden",!f);}
+
+function commitCandidateEnrollment(e){
+  e.preventDefault();
+  var name=document.getElementById("inputName").value.trim();
+  var age=parseInt(document.getElementById("inputAge").value)||0;
+  var civilStatus=document.getElementById("inputCivilStatus").value;
+  var gender=document.getElementById("inputGender").value;
+  var source=document.getElementById("inputSource").value;
+  var address=document.getElementById("inputAddress").value.trim();
+  var contact=document.getElementById("inputContact").value.trim();
+  if(candidates.some(function(c){return c.name.toLowerCase()===name.toLowerCase();})){dispatchToast("Duplicate Found","An applicant with this name already exists.","warning");return;}
+  var id=candidates.length?Math.max.apply(null,candidates.map(function(c){return c.id;}))+1:1;
+  candidates.push({id:id,name:name,age:age,civilStatus:civilStatus,gender:gender,contact:contact,address:address,source:source,
+    s2:{empStatus:"",education:"",lastEmployer:"",examScore:0,literacy:"Passed",hasTattoo:false,hasPiercing:false,hasScar:false,wearingGlasses:false,goodGrooming:false,hasDisability:false,height:"",weight:"",interviewRemarks:"",docs:{diploma:false,nbi:false,police:false,sss:false,pagibig:false,tin:false,osa:false}},
+    s3:{medStatus:"Pending",medDate:"",medNotes:"",docs:{philhealth:false,medResult:false,xray:false}},
+    s4:{orientDate:"",orientTime:"",orientVenue:"",clientSite:"JAE Philippines Inc.",attendance:"Scheduled",orientRemarks:""},
+    s5:{deployDate:"",deployClient:"JAE Philippines Inc.",deployRole:"",deployNotes:"",reqs:{contract:false,id:false,uniform:false,briefed:false}},stage:1});
+  renderActiveState();
+  logTransaction(currentRole==="Supervisor"?"Supervisor":"Staff","Added "+name+" (ID #"+id+") via "+source+".");
+  dispatchToast("Applicant Added",name+" has been enrolled — JAE Philippines Inc.");
+  closeEnrollmentModal();
+}
+
+function onDrawerStageChange(val){showDrawerPanel(parseInt(val));}
+function showDrawerPanel(stage){for(var i=1;i<=5;i++){var p=document.getElementById("panel-stage-"+i);if(p)p.classList.toggle("active-panel",i===stage);}}
+
+function updateScoreTag(){
+  var score=parseInt(document.getElementById("dExamScore").value)||0;
+  var lit=document.getElementById("dLiteracy").value;
+  var area=document.getElementById("scoreTagArea");
+  if(!area)return;
+  var pass=score>=70&&lit==="Passed";
+  area.innerHTML=pass?'<span class="score-tag score-pass">&#x2713; Passes Threshold (&ge;70% &amp; Literacy Passed)</span>':'<span class="score-tag score-fail">&#x2717; Below Threshold &mdash; Review Required</span>';
+}
+
+function openComplianceDrawer(id){
+  activeCandidateId=id;
+  var c=candidates.find(function(x){return x.id===id;});
+  if(!c)return;
+  document.getElementById("drawerCandidateName").innerText=c.name;
+  document.getElementById("drawerSourcingTag").innerText=c.source+' \u00B7 '+c.gender+' \u00B7 Stage '+c.stage;
+  document.getElementById("pipelineSelectField").value=c.stage;
+  showDrawerPanel(c.stage);
+  // S1
+  document.getElementById("dAge").value=c.age||"";
+  document.getElementById("dCivilStatus").value=c.civilStatus||"Single";
+  document.getElementById("dGender").value=c.gender||"Male";
+  document.getElementById("dContact").value=c.contact||"";
+  document.getElementById("dAddress").value=c.address||"";
+  // S2
+  document.getElementById("dEmpStatus").value=c.s2.empStatus||"";
+  document.getElementById("dEducation").value=c.s2.education||"";
+  document.getElementById("dLastEmployer").value=c.s2.lastEmployer||"";
+  document.getElementById("dExamScore").value=c.s2.examScore||"";
+  document.getElementById("dLiteracy").value=c.s2.literacy||"Passed";
+  document.getElementById("dHasTattoo").checked=!!c.s2.hasTattoo;
+  document.getElementById("dHasPiercing").checked=!!c.s2.hasPiercing;
+  document.getElementById("dHasScar").checked=!!c.s2.hasScar;
+  document.getElementById("dWearingGlasses").checked=!!c.s2.wearingGlasses;
+  document.getElementById("dGoodGrooming").checked=!!c.s2.goodGrooming;
+  document.getElementById("dHasDisability").checked=!!c.s2.hasDisability;
+  document.getElementById("dHeight").value=c.s2.height||"";
+  document.getElementById("dWeight").value=c.s2.weight||"";
+  document.getElementById("dInterviewRemarks").value=c.s2.interviewRemarks||"";
+  document.getElementById("dDocDiploma").checked=!!c.s2.docs.diploma;
+  document.getElementById("dDocNbi").checked=!!c.s2.docs.nbi;
+  document.getElementById("dDocPolice").checked=!!c.s2.docs.police;
+  document.getElementById("dDocSss").checked=!!c.s2.docs.sss;
+  document.getElementById("dDocPagibig").checked=!!c.s2.docs.pagibig;
+  document.getElementById("dDocTin").checked=!!c.s2.docs.tin;
+  document.getElementById("dDocOsa").checked=!!c.s2.docs.osa;
+  updateScoreTag();
+  // S3
+  document.getElementById("medicalSelectField").value=c.s3.medStatus||"Pending";
+  document.getElementById("dMedDate").value=c.s3.medDate||"";
+  document.getElementById("dMedNotes").value=c.s3.medNotes||"";
+  document.getElementById("dDocPhilhealth").checked=!!c.s3.docs.philhealth;
+  document.getElementById("dDocMedResult").checked=!!c.s3.docs.medResult;
+  document.getElementById("dDocXray").checked=!!c.s3.docs.xray;
+  // S4
+  document.getElementById("dOrientDate").value=c.s4.orientDate||"";
+  document.getElementById("dOrientTime").value=c.s4.orientTime||"";
+  document.getElementById("dOrientVenue").value=c.s4.orientVenue||"";
+  document.getElementById("dClientSite").value=c.s4.clientSite||"JAE Philippines Inc.";
+  document.getElementById("dOrientAttendance").value=c.s4.attendance||"Scheduled";
+  document.getElementById("dOrientRemarks").value=c.s4.orientRemarks||"";
+  // S5
+  document.getElementById("dDeployDate").value=c.s5.deployDate||"";
+  document.getElementById("dDeployClient").value=c.s5.deployClient||"JAE Philippines Inc.";
+  document.getElementById("dDeployRole").value=c.s5.deployRole||"";
+  document.getElementById("dDeployNotes").value=c.s5.deployNotes||"";
+  document.getElementById("dDepContract").checked=!!c.s5.reqs.contract;
+  document.getElementById("dDepId").checked=!!c.s5.reqs.id;
+  document.getElementById("dDepUniform").checked=!!c.s5.reqs.uniform;
+  document.getElementById("dDepBriefed").checked=!!c.s5.reqs.briefed;
+  document.getElementById("drawerDeleteBtn").classList.toggle("hidden",currentRole!=="Supervisor");
+  document.getElementById("complianceDrawer").classList.add("open");
+}
+
+function closeComplianceDrawer(){document.getElementById("complianceDrawer").classList.remove("open");activeCandidateId=null;}
+
+function saveComplianceDrawer(){
+  if(!activeCandidateId)return;
+  var c=candidates.find(function(x){return x.id===activeCandidateId;});
+  if(!c)return;
+  var stage=parseInt(document.getElementById("pipelineSelectField").value);
+  var med=document.getElementById("medicalSelectField").value;
+  if(stage===5&&med!=="Cleared"){dispatchToast("Cannot Deploy","Applicant must be medically cleared before deployment.","error");return;}
+  c.age=parseInt(document.getElementById("dAge").value)||c.age;
+  c.civilStatus=document.getElementById("dCivilStatus").value;
+  c.gender=document.getElementById("dGender").value;
+  c.contact=document.getElementById("dContact").value;
+  c.address=document.getElementById("dAddress").value;
+  c.s2.empStatus=document.getElementById("dEmpStatus").value;
+  c.s2.education=document.getElementById("dEducation").value;
+  c.s2.lastEmployer=document.getElementById("dLastEmployer").value;
+  c.s2.examScore=parseInt(document.getElementById("dExamScore").value)||0;
+  c.s2.literacy=document.getElementById("dLiteracy").value;
+  c.s2.hasTattoo=document.getElementById("dHasTattoo").checked;
+  c.s2.hasPiercing=document.getElementById("dHasPiercing").checked;
+  c.s2.hasScar=document.getElementById("dHasScar").checked;
+  c.s2.wearingGlasses=document.getElementById("dWearingGlasses").checked;
+  c.s2.goodGrooming=document.getElementById("dGoodGrooming").checked;
+  c.s2.hasDisability=document.getElementById("dHasDisability").checked;
+  c.s2.height=document.getElementById("dHeight").value;
+  c.s2.weight=document.getElementById("dWeight").value;
+  c.s2.interviewRemarks=document.getElementById("dInterviewRemarks").value;
+  c.s2.docs.diploma=document.getElementById("dDocDiploma").checked;
+  c.s2.docs.nbi=document.getElementById("dDocNbi").checked;
+  c.s2.docs.police=document.getElementById("dDocPolice").checked;
+  c.s2.docs.sss=document.getElementById("dDocSss").checked;
+  c.s2.docs.pagibig=document.getElementById("dDocPagibig").checked;
+  c.s2.docs.tin=document.getElementById("dDocTin").checked;
+  c.s2.docs.osa=document.getElementById("dDocOsa").checked;
+  c.s3.medStatus=med;
+  c.s3.medDate=document.getElementById("dMedDate").value;
+  c.s3.medNotes=document.getElementById("dMedNotes").value;
+  c.s3.docs.philhealth=document.getElementById("dDocPhilhealth").checked;
+  c.s3.docs.medResult=document.getElementById("dDocMedResult").checked;
+  c.s3.docs.xray=document.getElementById("dDocXray").checked;
+  c.s4.orientDate=document.getElementById("dOrientDate").value;
+  c.s4.orientTime=document.getElementById("dOrientTime").value;
+  c.s4.orientVenue=document.getElementById("dOrientVenue").value;
+  c.s4.clientSite=document.getElementById("dClientSite").value;
+  c.s4.attendance=document.getElementById("dOrientAttendance").value;
+  c.s4.orientRemarks=document.getElementById("dOrientRemarks").value;
+  c.s5.deployDate=document.getElementById("dDeployDate").value;
+  c.s5.deployClient=document.getElementById("dDeployClient").value;
+  c.s5.deployRole=document.getElementById("dDeployRole").value;
+  c.s5.deployNotes=document.getElementById("dDeployNotes").value;
+  c.s5.reqs.contract=document.getElementById("dDepContract").checked;
+  c.s5.reqs.id=document.getElementById("dDepId").checked;
+  c.s5.reqs.uniform=document.getElementById("dDepUniform").checked;
+  c.s5.reqs.briefed=document.getElementById("dDepBriefed").checked;
+  c.stage=stage;
+  renderActiveState();
+  logTransaction(currentRole==="Supervisor"?"Supervisor":"Staff","Updated profile for "+c.name+" (Stage "+stage+").","STATUS_CHANGE");
+  dispatchToast("Changes Saved",c.name+"'s profile has been updated.");
+  closeComplianceDrawer();
+}
+
+function deleteCandidateExecution(){
+  if(currentRole!=="Supervisor"){dispatchToast("Access Denied","Only supervisors can remove applicant profiles.","error");return;}
+  if(!activeCandidateId)return;
+  var i=candidates.findIndex(function(c){return c.id===activeCandidateId;});
+  if(i!==-1){var name=candidates[i].name;candidates.splice(i,1);renderActiveState();logTransaction("Supervisor","Removed profile: "+name+".","SECURITY_ALERT");dispatchToast("Applicant Removed",name+" has been deleted.","warning");closeComplianceDrawer();}
+}
+
+function generateReport(){if(currentRole!=="Supervisor")return;dispatchToast("Report Ready","Sourcing report PDF has been generated.","success");}
+
+function setRole(role){
+  currentRole=role;
+  var sB=document.getElementById("roleStaffBtn"),spB=document.getElementById("roleSupervisorBtn");
+  var dsp=document.getElementById("userDisplay"),sub=document.getElementById("roleSubtext");
+  var nA=document.getElementById("nav-analytics"),nL=document.getElementById("nav-logs");
+  var dBtn=document.getElementById("drawerDeleteBtn");
+  if(role==="Supervisor"){
+    sB.classList.remove("active");spB.classList.add("active");
+    dsp.innerText="Recruitment Supervisor";sub.innerText="Recruitment Supervisor";
+    nA.classList.remove("locked");nA.classList.add("unlocked");
+    nL.classList.remove("locked");nL.classList.add("unlocked");
+    if(activeCandidateId)dBtn.classList.remove("hidden");
+    dispatchToast("Supervisor Access","Full administrative access granted.","success");
+  }else{
+    spB.classList.remove("active");sB.classList.add("active");
+    dsp.innerText="Recruiter View";sub.innerText="Staff Account";
+    nA.classList.add("locked");nA.classList.remove("unlocked");
+    nL.classList.add("locked");nL.classList.remove("unlocked");
+    dBtn.classList.add("hidden");
+    document.getElementById("auditModal").classList.add("hidden");
+    dispatchToast("Staff Mode","Switched to standard staff view.","warning");
+  }
+}
+
+function toggleAuditTrail(){
+  if(currentRole!=="Supervisor"){dispatchToast("Access Denied","Only supervisors can view the activity log.","error");return;}
+  document.getElementById("auditModal").classList.toggle("hidden");
+}
+</script>
+</body>
 </html>

@@ -248,7 +248,7 @@ td:first-child{font-weight:600;color:var(--ink);font-family:"Lora",serif;}
   <div class="topbar-left">
     <span class="loc-label">
       <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-      Manggahan, General Trias, Cavite &nbsp;&bull;&nbsp; JAE Philippines Inc.
+      Manggahan, General Trias, Cavite &nbsp;&bull;&nbsp; FAMSI-Cavite
     </span>
   </div>
   <div class="topbar-right">
@@ -688,8 +688,6 @@ td:first-child{font-weight:600;color:var(--ink);font-family:"Lora",serif;}
       <button class="mclose" onclick="toggleAuditTrail()">&times;</button>
     </div>
     <div id="auditTerminalLogs" class="aterm">
-      <div style="color:#4b5563">[2026-05-26 08:00:00] &mdash; System initialized &middot; FAMSync v2.2 online &middot; JAE Philippines Inc.</div>
-      <div><span style="color:#60a5fa">[ADDED]</span> Recruitment_Staff registered Mateo Ramos via Facebook.</div>
       <div style="color:#4b5563">[GATEWAY] Listening on http://192.168.1.100</div>
     </div>
     <div class="afot"><button class="btn-dk" onclick="toggleAuditTrail()">Close</button></div>
@@ -759,7 +757,7 @@ var candidates=[
    s5:{deployDate:"2026-05-15",deployClient:"JAE Philippines Inc.",deployRole:"Utility Staff",deployNotes:"Assigned to warehouse area.",reqs:{contract:true,id:true,uniform:true,briefed:true}},stage:5}
 ];
 
-window.onload=function(){renderActiveState();logTransaction("SYSTEM","Interface initialized. FAMSync v2.2 online — JAE Philippines Inc.","SYSTEM");};
+window.onload=function(){renderActiveState();logTransaction("SYSTEM","Interface initialized.","SYSTEM");};
 
 function dispatchToast(title,msg,type){
   if(!type)type="success";
